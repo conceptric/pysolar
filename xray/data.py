@@ -1,7 +1,7 @@
 import atpy
 import asciitable
 
-def import_goes(path):
+def read(path):
     ''' Imports the specified GOES X-Ray data file and returns the required data columns as an ATPy table
         path    : a string containing the path to the file
         returns : an ATPy table containing columns for the component of datetime 
