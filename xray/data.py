@@ -24,8 +24,8 @@ class GoesFile():
                'col2': 'month',
                'col3': 'day', 
                'col4': 'time',
-               'col7': '0.05- 0.4 nanometer (W/m2)',
-               'col8': '0.1 - 0.8 nanometer (W/m2)'}
+               'col7': '0.05-0.4 nanometer (W/m2)',
+               'col8': '0.1-0.8 nanometer (W/m2)'}
     
     def __init__(self, path):
         " Reads the file data and sets table column names "

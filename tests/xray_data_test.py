@@ -28,8 +28,8 @@ class TestXrayGoesFile(unittest.TestCase):
                     'month',
                     'day',
                     'time',
-                    '0.05- 0.4 nanometer (W/m2)',
-                    '0.1 - 0.8 nanometer (W/m2)')
+                    '0.05-0.4 nanometer (W/m2)',
+                    '0.1-0.8 nanometer (W/m2)')
         actual = self.goesfile.table.names
         self.assertEqual(actual, expected)
         
