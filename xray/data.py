@@ -20,7 +20,7 @@ class GoesFile():
         Path: path to the data file
     '''
     
-    COLUMNS = {'col1': 'year',
+    columns = {'col1': 'year',
                'col2': 'month',
                'col3': 'day', 
                'col4': 'time',
@@ -29,25 +29,18 @@ class GoesFile():
     
     def __init__(self, path):
         " Reads the file data and sets table column names "
-        self.table = self._read(path)
-        self._rename_columns()
+        self.table = self.__read(path)
+        self.__rename_columns()
     
-    def _read(self, path):
+    def __read(self, path):
         goes = atpy.Table(path, type="ascii", delimiter="\s", 
             header_start=None, data_start=2)
-        goes.keep_columns(self.COLUMNS.keys())
+        goes.keep_columns(self.columns.keys())
         return goes
         
-    def _rename_columns(self):
+    def __rename_columns(self):
         " Renames the imported columns with something more descriptive "
-        for k, v in self.COLUMNS.iteritems():
-            if (k in self.names()):
+        for k, v in self.columns.iteritems():
+            if (k in self.table.names):
                 self.table.rename_column(k, v)        
-        
-    def size(self):
-        " Returns the number of records in the table "
-        return len(self.table)
-        
-    def names(self):
-        " Returns a tuple of the field names "
-        return self.table.names
+                

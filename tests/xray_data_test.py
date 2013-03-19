@@ -14,11 +14,13 @@ class TestXrayGoesFile(unittest.TestCase):
         self.assert_(self.goesfile)
         
     def test_length(self):
-        self.assertEqual(self.goesfile.size(), 288)
+        expected = 288
+        actual = len(self.goesfile.table)
+        self.assertEqual(actual, expected)
 
     def test_original_columns(self):
         expected = ['col1', 'col2', 'col3', 'col4', 'col7', 'col8']
-        actual = sorted(self.goesfile.COLUMNS.keys())
+        actual = sorted(self.goesfile.columns.keys())
         self.assertEqual(actual, expected)
         
     def test_new_columns(self):
@@ -28,6 +30,6 @@ class TestXrayGoesFile(unittest.TestCase):
                     'time',
                     '0.05- 0.4 nanometer (W/m2)',
                     '0.1 - 0.8 nanometer (W/m2)')
-        actual = self.goesfile.names()
+        actual = self.goesfile.table.names
         self.assertEqual(actual, expected)
         
