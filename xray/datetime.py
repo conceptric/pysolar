@@ -24,3 +24,13 @@ def format_goes_table(table):
     table.add_column('datetime', np.asarray(datetimes), dtype='str', before='goes-15')
     return table
     
+class DateCompiler():
+    """ Class with methods to build datetime strings from 
+        a dictionary containing components.
+    """
+
+    def build_datetime(self, comp):
+        time = "%04i" % (comp['time'])
+        dt = "%04i-%02i-%02i %s:%s" % (comp['year'], comp['month'], comp['day'],
+                                    time[:2], time[2:])
+        return dt

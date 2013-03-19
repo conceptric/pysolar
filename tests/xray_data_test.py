@@ -2,7 +2,7 @@ import unittest
 import os
 from pygoes.xray.data import GoesFile
 
-class TestXrayGoesFile(unittest.TestCase):
+class TestGoesFile(unittest.TestCase):
     """ Test the class that imports GOES-15 X-Ray data files """
 
     def setUp(self):
@@ -37,4 +37,3 @@ class TestXrayGoesFile(unittest.TestCase):
                     '0.1-0.8 nanometer (W/m2)')
         actual = self.goesfile.table.names
         self.assertEqual(actual, expected)
-        
