@@ -10,9 +10,13 @@ class TestXrayGoesFile(unittest.TestCase):
         test_data = os.path.join(test_root, '20130227_Gp_xr_5m.txt')
         self.goesfile = GoesFile(test_data)
 
+    def test_requires_path(self):
+        with self.assertRaises(Exception):
+            GoesFile()
+
     def test_exists(self):
         self.assert_(self.goesfile)
-        
+
     def test_length(self):
         expected = 288
         actual = len(self.goesfile.table)
@@ -28,6 +32,7 @@ class TestXrayGoesFile(unittest.TestCase):
                     'month',
                     'day',
                     'time',
+                    'datetime',
                     '0.05-0.4 nanometer (W/m2)',
                     '0.1-0.8 nanometer (W/m2)')
         actual = self.goesfile.table.names

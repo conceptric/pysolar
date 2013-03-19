@@ -31,6 +31,7 @@ class GoesFile():
         " Reads the file data and sets table column names "
         self.table = self.__read(path)
         self.__rename_columns()
+        self.__insert_datetime_column()
     
     def __read(self, path):
         goes = atpy.Table(path, type="ascii", delimiter="\s", 
@@ -43,4 +44,9 @@ class GoesFile():
         for k, v in self.columns.iteritems():
             if (k in self.table.names):
                 self.table.rename_column(k, v)        
-                
+
+    def __insert_datetime_column(self):
+        " Inserts a column for datetime"
+        self.table.add_column('datetime', str, dtype='str', after='time')
+
+    
