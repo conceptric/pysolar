@@ -1,5 +1,6 @@
 import atpy
 import asciitable
+from pygoes.xray.datetime import DateCompiler
 
 def read(path):
     ''' Imports the specified GOES X-Ray data file and returns the required data columns as an ATPy table
@@ -47,6 +48,12 @@ class GoesFile():
 
     def __insert_datetime_column(self):
         " Inserts a column for datetime"
-        self.table.add_column('datetime', str, dtype='str', after='time')
+        self.table.add_column('datetime', self.__fill_datetimes(), 
+            dtype='str', after='time')
 
-    
+    def __fill_datetimes(self):
+        " Fills the datetime column "
+        stack = []
+        for row in self.table:
+            stack.append(DateCompiler().build_datetime(row))
+        return stack

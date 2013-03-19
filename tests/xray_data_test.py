@@ -37,3 +37,13 @@ class TestGoesFile(unittest.TestCase):
                     '0.1-0.8 nanometer (W/m2)')
         actual = self.goesfile.table.names
         self.assertEqual(actual, expected)
+
+    def test_first_datetime(self):
+        expected = "2013-02-27 00:00"
+        actual = self.goesfile.table.datetime[0]
+        self.assertEqual(actual, expected)
+        
+    def test_last_datetime(self):
+        expected = "2013-02-27 23:55"
+        actual = self.goesfile.table.datetime[287]
+        self.assertEqual(actual, expected)        
