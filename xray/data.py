@@ -16,7 +16,10 @@ def read(path):
     return goes
 
 class GoesFile():
-    ''' Class to represent a GOES-15 W-Ray data file using ATPy '''
+    ''' Class to represent a GOES-15 W-Ray data file using ATPy 
+        Path: path to the data file
+    '''
+    
     COLUMNS = {'col1': 'year',
                'col2': 'month',
                'col3': 'day', 

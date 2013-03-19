@@ -6,9 +6,9 @@ class TestXrayGoesFile(unittest.TestCase):
     """ Test the class that imports GOES-15 X-Ray data files """
 
     def setUp(self):
-        dir = os.path.dirname(__file__)
-        path = os.path.join(dir, '20130227_Gp_xr_5m.txt')
-        self.goesfile = GoesFile(path)
+        test_root = os.path.dirname(__file__)
+        test_data = os.path.join(test_root, '20130227_Gp_xr_5m.txt')
+        self.goesfile = GoesFile(test_data)
 
     def test_exists(self):
         self.assert_(self.goesfile)
@@ -30,3 +30,4 @@ class TestXrayGoesFile(unittest.TestCase):
                     '0.1 - 0.8 nanometer (W/m2)')
         actual = self.goesfile.names()
         self.assertEqual(actual, expected)
+        
