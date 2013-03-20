@@ -9,6 +9,7 @@ class TestGoesDataSet(unittest.TestCase):
     GOES-15 X-Ray data files 
     """
     test_root = os.path.dirname(__file__)
+    filenames =  ['20130227_Gp_xr_5m.txt', '20130228_Gp_xr_5m.txt']
     
     def setUp(self):
         self.dataset = GoesDataSet()
@@ -20,13 +21,12 @@ class TestGoesDataSet(unittest.TestCase):
         self.assertEquals(self.dataset.datafiles, [])
         
     def test_add_file_to_dataset(self):
-        self.dataset.compile(self.test_root, ['20130227_Gp_xr_5m.txt'])
+        self.dataset.compile(self.test_root, [self.filenames[0]])
         actual = len(self.dataset.datafiles)
         self.assertEquals(1, actual)
 
     def test_add__two_files_to_dataset(self):
-        filenames =  ['20130227_Gp_xr_5m.txt', '20130228_Gp_xr_5m.txt']
-        self.dataset.compile(self.test_root, filenames)
+        self.dataset.compile(self.test_root, self.filenames)
         actual = len(self.dataset.datafiles)
         self.assertEquals(2, actual)
 
