@@ -1,4 +1,5 @@
 import atpy
+from numpy import datetime64
 from pygoes.xray.datetime import DateCompiler
 
 class GoesFile():
@@ -53,3 +54,19 @@ class GoesFile():
         for row in self.table:
             stack.append(DateCompiler().build_datetime(row))
         return stack
+        
+    def get_date_range(self, start, end):
+        ''' 
+        Returns a table containing records between, and inclusive of, 
+        the datetimes defined by the provided strings formatted:
+        
+        "YYYY-MM-DD HH:MM:SS"
+        
+        start   = first datetime to be retrieved
+        end     = last datetime to be retrieved
+        '''
+        datetimes = self.table.datetime.astype(datetime64)
+        starting = (datetimes >= datetime64(start))
+        ending = (datetimes <= datetime64(end))        
+        query = self.table.where(starting & ending)
+        return query
