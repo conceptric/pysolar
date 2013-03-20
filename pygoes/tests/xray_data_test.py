@@ -29,6 +29,18 @@ class TestGoesDataSet(unittest.TestCase):
         self.dataset.compile(self.test_root, self.filenames)
         actual = len(self.dataset.datafiles)
         self.assertEquals(2, actual)
+        
+    def test_get_date_range(self):
+        self.dataset.compile(self.test_root, self.filenames)
+        
+        start   = "2013-02-27 23:50"
+        end     = "2013-02-28 00:10"
+        actual = self.dataset.get_date_range(start, end)
+
+        self.assertIsInstance(actual, Table)
+        self.assertEqual(actual.datetime[0], start)
+        self.assertEqual(len(actual), 5)
+        self.assertEqual(actual.datetime[4], end)
 
 
 class TestGoesFile(unittest.TestCase):

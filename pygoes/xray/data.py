@@ -25,8 +25,28 @@ class GoesDataSet:
             datafile = GoesFile(os.path.join(root_path, file))
             self.datafiles.append(datafile)
         
+    def get_date_range(self, start, end):
+        ''' 
+        Returns a table containing records between, and inclusive of, 
+        the datetimes defined by the provided strings formatted:
         
+        "YYYY-MM-DD HH:MM:SS"
         
+        start   = first datetime to be retrieved
+        end     = last datetime to be retrieved
+        '''
+        query = []
+        for file in self.datafiles:
+            query.append(file.get_date_range(start, end))
+        return self.__combine_tables(query)
+        
+    def __combine_tables(self, tables):
+        table = tables[0]
+        for i in range(1, len(tables), 1):
+            table.append(tables[i])
+        return table
+        
+                
 class GoesFile:
     ''' 
     Class to represent a GOES-15 X-Ray data file using ATPy tables.
