@@ -1,24 +1,21 @@
 import atpy
-import asciitable
 from pygoes.xray.datetime import DateCompiler
 
-def read(path):
-    ''' Imports the specified GOES X-Ray data file and returns the required data columns as an ATPy table
-        path    : a string containing the path to the file
-        returns : an ATPy table containing columns for the component of datetime 
-                  and 0.1 - 0.8 nanometer x-ray data as strings.
-    '''
-    converters = {'col1': [asciitable.convert_list(str)],
-                  'col2': [asciitable.convert_list(str)],
-                  'col3': [asciitable.convert_list(str)],
-                  'col4': [asciitable.convert_list(str)]}
-    goes = atpy.Table(path, type="ascii", delimiter="\s", header_start=None, data_start=2, converters=converters)
-    goes.keep_columns(('col1','col2','col3', 'col4', 'col8'))
-    return goes
-
 class GoesFile():
-    ''' Class to represent a GOES-15 W-Ray data file using ATPy 
-        Path: path to the data file
+    ''' 
+    Class to represent a GOES-15 W-Ray data file using ATPy tables.
+    
+    On creation it reads the file data from the path, 
+    sets meaningful names for existing table columns, 
+    and inserts a new column populated with datetime strings
+    generated from the components first 4 columns of the original file.
+    
+    These datetime strings can be used directly to instantiate
+    NumPy datetime64 objects.
+    
+    Path: path to the data file.
+    The table attribute contains the ATPy table instance.       
+
     '''
     
     columns = {'col1': 'year',
@@ -28,8 +25,7 @@ class GoesFile():
                'col7': '0.05-0.4 nanometer (W/m2)',
                'col8': '0.1-0.8 nanometer (W/m2)'}
     
-    def __init__(self, path):
-        " Reads the file data and sets table column names "
+    def __init__(self, path):         
         self.table = self.__read(path)
         self.__rename_columns()
         self.__insert_datetime_column()
