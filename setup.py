@@ -1,6 +1,7 @@
 from distutils.core import setup
 
 packages = ['pygoes', 'pygoes.xray']
+required = ['atpy']
 
 setup(
     name='pygoes',
@@ -9,5 +10,6 @@ setup(
     author_email='james@conceptric.co.uk',
     url='none',
     description='Tools for importing and manipulating GOES data',
-    packages=packages
+    packages=packages,
+    install_requires=required
 )
