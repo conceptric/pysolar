@@ -1,3 +1,4 @@
+import os
 import atpy
 from numpy import datetime64
 from pygoes.xray.datetime import DateCompiler
@@ -6,9 +7,26 @@ class GoesDataSet:
     '''
     Class to compile a series of GOES X-Ray data files into
     a dataset that can be manipulated by its methods
-    '''
     
+    datafiles: a list of the file object in the dataset
+    '''    
     
+    def __init__(self):
+        self.datafiles = []
+    
+    def compile(self, root_path, files):
+        '''
+        Imports the data files as GoesFile instances
+        
+        root_path = path to the base file directory
+        files     = a list of the filename strings to import
+        '''
+        for file in files:
+            datafile = GoesFile(os.path.join(root_path, file))
+            self.datafiles.append(datafile)
+        
+        
+        
 class GoesFile:
     ''' 
     Class to represent a GOES-15 X-Ray data file using ATPy tables.

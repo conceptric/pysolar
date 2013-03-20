@@ -8,8 +8,27 @@ class TestGoesDataSet(unittest.TestCase):
     Test the class to work with multiple 
     GOES-15 X-Ray data files 
     """
+    test_root = os.path.dirname(__file__)
+    
+    def setUp(self):
+        self.dataset = GoesDataSet()
+            
     def test_exists(self):
-        self.assert_(GoesDataSet())
+        self.assert_(self.dataset)
+
+    def test_has_empty_datafiles_attribute(self):
+        self.assertEquals(self.dataset.datafiles, [])
+        
+    def test_add_file_to_dataset(self):
+        self.dataset.compile(self.test_root, ['20130227_Gp_xr_5m.txt'])
+        actual = len(self.dataset.datafiles)
+        self.assertEquals(1, actual)
+
+    def test_add__two_files_to_dataset(self):
+        filenames =  ['20130227_Gp_xr_5m.txt', '20130228_Gp_xr_5m.txt']
+        self.dataset.compile(self.test_root, filenames)
+        actual = len(self.dataset.datafiles)
+        self.assertEquals(2, actual)
 
 
 class TestGoesFile(unittest.TestCase):
