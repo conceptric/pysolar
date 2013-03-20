@@ -25,7 +25,7 @@ class TestGoesDataSet(unittest.TestCase):
         actual = len(self.dataset.datafiles)
         self.assertEquals(1, actual)
 
-    def test_add__two_files_to_dataset(self):
+    def test_add_two_files_to_dataset(self):
         self.dataset.compile(self.test_root, self.filenames)
         actual = len(self.dataset.datafiles)
         self.assertEquals(2, actual)
