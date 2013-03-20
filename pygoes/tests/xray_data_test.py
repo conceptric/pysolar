@@ -1,10 +1,21 @@
 import unittest
 import os
 from atpy.basetable import Table
-from pygoes.xray.data import GoesFile
+from pygoes.xray.data import *
+
+class TestGoesDataSet(unittest.TestCase):
+    """ 
+    Test the class to work with multiple 
+    GOES-15 X-Ray data files 
+    """
+    def test_exists(self):
+        self.assert_(GoesDataSet())
+
 
 class TestGoesFile(unittest.TestCase):
-    """ Test the class that imports GOES-15 X-Ray data files """
+    """ 
+    Test the class that imports GOES-15 X-Ray data files 
+    """
 
     def setUp(self):
         test_root = os.path.dirname(__file__)
