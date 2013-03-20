@@ -10,5 +10,5 @@ def plot_goes(plotaxis, goes, datemin, datemax):
         datemax : Numpy datetime64 of the end time
     '''
     pgoes = goes.where((goes.datetime.astype(np.datetime64) >= datemin) & (goes.datetime.astype(np.datetime64) <= datemax))
-    plotaxis.plot_date(pld.date2num(pgoes.datetime.astype(np.datetime64).astype(object)), pgoes['goes-15'], label='goes-15', fmt='--') 
+    plotaxis.plot_date(pld.date2num(pgoes.datetime.astype(np.datetime64).astype(object)), pgoes['0.1-0.8 nanometer (W/m2)'], label='goes-15', fmt='--') 
     plotaxis.set_ylabel("GOES-15 0.1 - 0.8 nanometer (W/m2)")
