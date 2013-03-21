@@ -3,13 +3,14 @@ import os
 from atpy.basetable import Table
 from pygoes.xray.data import *
 
+TEST_ROOT = os.path.dirname(__file__)
+FILENAMES =  ['20130227_Gp_xr_5m.txt', '20130228_Gp_xr_5m.txt']
+
 class TestGoesDataSet(unittest.TestCase):
     """ 
     Test the class to work with multiple 
     GOES-15 X-Ray data files 
     """
-    test_root = os.path.dirname(__file__)
-    filenames =  ['20130227_Gp_xr_5m.txt', '20130228_Gp_xr_5m.txt']
     
     def setUp(self):
         self.dataset = GoesDataSet()
@@ -21,26 +22,43 @@ class TestGoesDataSet(unittest.TestCase):
         self.assertEquals(self.dataset.datafiles, [])
         
     def test_add_file_to_dataset(self):
-        self.dataset.compile(self.test_root, [self.filenames[0]])
+        self.dataset.compile(TEST_ROOT, [FILENAMES[0]])
         actual = len(self.dataset.datafiles)
         self.assertEquals(1, actual)
 
     def test_add_two_files_to_dataset(self):
-        self.dataset.compile(self.test_root, self.filenames)
+        self.dataset.compile(TEST_ROOT, FILENAMES)
         actual = len(self.dataset.datafiles)
         self.assertEquals(2, actual)
-        
-    def test_get_date_range(self):
-        self.dataset.compile(self.test_root, self.filenames)
-        
-        start   = "2013-02-27 23:50"
-        end     = "2013-02-28 00:10"
-        actual = self.dataset.get_date_range(start, end)
 
+class TestDataSetDateSorting(unittest.TestCase):
+    """ 
+    Test the methods for working with date ranges
+    that spread over multiple files.
+    """
+    
+    def setUp(self):
+        self.dataset = GoesDataSet()
+        self.start   = "2013-02-27 23:50"
+        self.end     = "2013-02-28 00:10"
+        self.records = 5
+    
+    def test_returns_a_table(self):
+        self.dataset.compile(TEST_ROOT, FILENAMES)
+        actual = self.dataset.get_date_range(self.start, self.end)
         self.assertIsInstance(actual, Table)
-        self.assertEqual(actual.datetime[0], start)
-        self.assertEqual(len(actual), 5)
-        self.assertEqual(actual.datetime[4], end)
+
+    def test_correct_number_of_records(self):
+        self.dataset.compile(TEST_ROOT, FILENAMES)
+        actual = self.dataset.get_date_range(self.start, self.end)
+        self.assertEqual(len(actual), self.records)
+    
+    def test_files_in_date_order(self):
+        self.dataset.compile(TEST_ROOT, FILENAMES)
+        actual = self.dataset.get_date_range(self.start, self.end)
+        self.assertEqual(actual.datetime[0], self.start)
+        self.assertEqual(actual.datetime[self.records - 1], self.end)
+
 
 
 class TestGoesFile(unittest.TestCase):
