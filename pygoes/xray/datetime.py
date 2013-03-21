@@ -8,8 +8,19 @@ class DateCompiler:
     '''
 
     def build_datetime(self, comp):
+        '''
+        Generates a string for datetime from components in a dictionary
+        including:
+        year YYYY
+        month MM
+        day DD
+        time 0000
+        
+        '''
         time = "%04i" % (comp['time'])
         components = (comp['year'], comp['month'], comp['day'],
                       time[:2], time[2:])
         dt = "%04i-%02i-%02i %s:%s" % components
         return dt
+        
+    
