@@ -67,7 +67,8 @@ class TestGoesFile(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_original_columns(self):
-        expected = ['col1', 'col2', 'col3', 'col4', 'col7', 'col8']
+        expected = ['col1', 'col2', 'col3', 
+            'col4', 'col5', 'col6', 'col7', 'col8']
         actual = sorted(self.goesfile.columns.keys())
 
         self.assertEqual(actual, expected)
@@ -77,9 +78,12 @@ class TestGoesFile(unittest.TestCase):
                     'month',
                     'day',
                     'time',
-                    'datetime',
+                    'JD days',
+                    'JD secs',
                     '0.05-0.4 nanometer (W/m2)',
-                    '0.1-0.8 nanometer (W/m2)')
+                    '0.1-0.8 nanometer (W/m2)',
+                    'datetime',
+                    'Modified JD')
         actual = self.goesfile.table.names
 
         self.assertEqual(actual, expected)
@@ -105,3 +109,7 @@ class TestGoesFile(unittest.TestCase):
         self.assertEqual(actual.datetime[0], start)
         self.assertEqual(len(actual), 7)
         self.assertEqual(actual.datetime[6], end)
+
+    def test_first_modified_jd(self):
+        actual = self.goesfile.table['Modified JD'][0]
+        self.assertEqual(actual, 1)

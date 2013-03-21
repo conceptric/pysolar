@@ -68,13 +68,15 @@ class GoesFile:
                'col2': 'month',
                'col3': 'day', 
                'col4': 'time',
+               'col5': 'JD days',
+               'col6': 'JD secs',
                'col7': '0.05-0.4 nanometer (W/m2)',
                'col8': '0.1-0.8 nanometer (W/m2)'}
     
     def __init__(self, path):         
         self.table = self.__read(path)
         self.__rename_columns()
-        self.__insert_datetime_column()
+        self.__insert_new_columns()
     
     def __read(self, path):
         goes = atpy.Table(path, type="ascii", delimiter="\s", 
@@ -88,10 +90,12 @@ class GoesFile:
             if (k in self.table.names):
                 self.table.rename_column(k, v)        
 
-    def __insert_datetime_column(self):
-        " Inserts a column for datetime"
+    def __insert_new_columns(self):
+        " Inserts columns for JD date and datetime"
         self.table.add_column('datetime', self.__fill_datetimes(), 
-            dtype='str', after='time')
+            dtype='str')
+        self.table.add_column('Modified JD', self.__fill_JD(), 
+            dtype='float')
 
     def __fill_datetimes(self):
         " Fills the datetime column "
@@ -100,6 +104,13 @@ class GoesFile:
             stack.append(DateCompiler().build_datetime(row))
         return stack
         
+    def __fill_JD(self):
+        " Fills the Modified JD column "
+        stack = []
+        for row in self.table:
+            stack.append(1)
+        return stack
+                
     def get_date_range(self, start, end):
         ''' 
         Returns a table containing records between, and inclusive of, 
