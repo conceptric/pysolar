@@ -104,7 +104,7 @@ class GoesFile:
         
     def __fill_JD(self):
         " Fills the Modified JD column "
-        f = lambda x: 1
+        f = lambda x: round( x['JD days'] + (x['JD secs'] / 86400.0), 5 )
         return self.__fill_column(f)
         
     def __fill_column(self, func):

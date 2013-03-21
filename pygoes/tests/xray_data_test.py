@@ -112,4 +112,11 @@ class TestGoesFile(unittest.TestCase):
 
     def test_first_modified_jd(self):
         actual = self.goesfile.table['Modified JD'][0]
-        self.assertEqual(actual, 1)
+        self.assertEqual(actual, 56350.00000)
+        
+    def test_last_modified_jd(self):
+        actual = self.goesfile.table['Modified JD'][287]
+        self.assertEqual(actual, 56350.99653)
+        
+        
+        
