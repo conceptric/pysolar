@@ -23,4 +23,11 @@ class DateCompiler:
         dt = "%04i-%02i-%02i %s:%s" % components
         return dt
         
-    
+    def modified_julian_date(self, comp):
+        '''
+        Generated a 5 decimal place float of Julian Date
+        from components for JD days and JD seconds.
+        '''
+        secs_per_day = 24 * 3600.0 
+        time = comp['JD days'] + ( comp['JD secs'] / secs_per_day )
+        return round(time, 5)

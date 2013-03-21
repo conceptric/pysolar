@@ -1,8 +1,11 @@
 import unittest
 from pygoes.xray.datetime import DateCompiler
 
-class TestDateCompiler(unittest.TestCase):
-    ''' Tests a Class to compiler datetime strings from components '''
+class TestDateCompilerDatetimes(unittest.TestCase):
+    """ 
+    Tests the Datetime string handling methods of 
+    the DateCompiler class.
+    """
     
     def test_basic_datetime(self):
         components = {'year': 2013,
@@ -21,4 +24,19 @@ class TestDateCompiler(unittest.TestCase):
         expected = "2013-02-02 00:10"
         actual = DateCompiler().build_datetime(components)
         self.assertEqual(expected, actual)
-            
+
+class TestDateCompilerJulianDate(unittest.TestCase):
+    """ 
+    Tests the Julian Date methods of the DateCompiler class.
+    """
+
+    def test_with_no_seconds(self):
+        components = { 'JD days': 56351, 'JD secs': 0 }
+        actual = DateCompiler().modified_julian_date(components)
+        self.assertEqual(56351.00000, actual)
+        
+    def test_with_maximum_seconds(self):
+        components = { 'JD days': 56351, 'JD secs': 86399 }
+        actual = DateCompiler().modified_julian_date(components)
+        self.assertEqual(56351.99999, actual)    
+        
