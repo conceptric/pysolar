@@ -59,6 +59,11 @@ class TestDataSetDateSorting(unittest.TestCase):
         self.assertEqual(actual.datetime[0], self.start)
         self.assertEqual(actual.datetime[self.records - 1], self.end)
 
+    def test_files_not_in_date_order(self):
+        self.dataset.compile(TEST_ROOT, reversed(FILENAMES))
+        actual = self.dataset.get_date_range(self.start, self.end)
+        self.assertEqual(actual.datetime[0], self.start)
+        self.assertEqual(actual.datetime[self.records - 1], self.end)
 
 
 class TestGoesFile(unittest.TestCase):
