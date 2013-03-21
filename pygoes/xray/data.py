@@ -99,18 +99,20 @@ class GoesFile:
 
     def __fill_datetimes(self):
         " Fills the datetime column "
-        stack = []
-        for row in self.table:
-            stack.append(DateCompiler().build_datetime(row))
-        return stack
+        f = lambda x: DateCompiler().build_datetime(x)
+        return self.__fill_column(f)
         
     def __fill_JD(self):
         " Fills the Modified JD column "
+        f = lambda x: 1
+        return self.__fill_column(f)
+        
+    def __fill_column(self, func):
         stack = []
         for row in self.table:
-            stack.append(1)
+            stack.append(func(row))
         return stack
-                
+
     def get_date_range(self, start, end):
         ''' 
         Returns a table containing records between, and inclusive of, 
