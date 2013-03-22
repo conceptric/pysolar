@@ -106,29 +106,29 @@ class TestGoesFile(unittest.TestCase):
             GoesFile(TEST_ROOT)
 
     def test_exists(self):
-        test_file = os.path.join(TEST_ROOT, '20130227_Gp_xr_5m.txt')
+        test_file = os.path.join(TEST_ROOT, FILENAMES[0])
         self.assert_(GoesFile(test_file))
 
 
 class TestGoesFileFormatting(unittest.TestCase):
     """ 
-    Test the data the GoesFile class imports, how it 
-    formats it, and accesses the results.
+    Test the data the GoesFile class imports, and how it 
+    formats it.
     """
     def setUp(self):
         self.goes = GoesFile(os.path.join(TEST_ROOT, FILENAMES[0]))
         self.glength = 288
 
-    def test_length(self):
+    def test_file_length(self):
         self.assertEqual(self.glength, len(self.goes.table))
 
-    def test_original_columns(self):
+    def test_original_column_names(self):
         expected = ['col1', 'col2', 'col3', 'col4', 
                     'col5', 'col6', 'col7', 'col8']
         actual = sorted(self.goes.columns.keys())
         self.assertEqual(expected, actual)
         
-    def test_new_columns(self):
+    def test_modified_column_names(self):
         expected = ('year', 'month', 'day', 'time',
                     'JD days', 'JD secs',
                     '0.05-0.4 nanometer (W/m2)',
@@ -137,14 +137,21 @@ class TestGoesFileFormatting(unittest.TestCase):
         actual = self.goes.table.names
         self.assertEqual(expected, actual)
 
-    def test_first_datetime(self):
+    def test_datetime_of_the_first_record(self):
         actual = self.goes.table.datetime[0]
         self.assertEqual("2013-02-27 00:00", actual)
         
-    def test_last_datetime(self):
+    def test_datetime_of_the_last_record(self):
         actual = self.goes.table.datetime[self.glength - 1]
         self.assertEqual("2013-02-27 23:55", actual)
-        
+
+class TestGoesFileReading(unittest.TestCase):
+    """ 
+    Test the data the GoesFile class accesses its contents.
+    """        
+    def setUp(self):
+        self.goes = GoesFile(os.path.join(TEST_ROOT, FILENAMES[0]))
+
     def test_get_date_range(self):
         start   = "2013-02-27 00:30"
         end     = "2013-02-27 01:00"
