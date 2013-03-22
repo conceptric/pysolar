@@ -85,7 +85,6 @@ class TestGoesFile(unittest.TestCase):
     """ 
     Test the class that imports GOES-15 X-Ray data files 
     """
-
     def setUp(self):
         test_root = os.path.dirname(__file__)
         test_data = os.path.join(test_root, '20130227_Gp_xr_5m.txt')
@@ -105,14 +104,12 @@ class TestGoesFile(unittest.TestCase):
     def test_length(self):
         expected = 288
         actual = len(self.goesfile.table)
-
         self.assertEqual(actual, expected)
 
     def test_original_columns(self):
         expected = ['col1', 'col2', 'col3', 
             'col4', 'col5', 'col6', 'col7', 'col8']
         actual = sorted(self.goesfile.columns.keys())
-
         self.assertEqual(actual, expected)
         
     def test_new_columns(self):
@@ -127,26 +124,22 @@ class TestGoesFile(unittest.TestCase):
                     'datetime',
                     'Modified JD')
         actual = self.goesfile.table.names
-
         self.assertEqual(actual, expected)
 
     def test_first_datetime(self):
         expected = "2013-02-27 00:00"
         actual = self.goesfile.table.datetime[0]
-
         self.assertEqual(actual, expected)
         
     def test_last_datetime(self):
         expected = "2013-02-27 23:55"
         actual = self.goesfile.table.datetime[287]
-
         self.assertEqual(actual, expected)
         
     def test_get_date_range(self):
         start   = "2013-02-27 00:30"
         end     = "2013-02-27 01:00"
         actual = self.goesfile.get_date_range(start, end)
-
         self.assertIsInstance(actual, Table)
         self.assertEqual(actual.datetime[0], start)
         self.assertEqual(len(actual), 7)
@@ -159,6 +152,4 @@ class TestGoesFile(unittest.TestCase):
     def test_last_modified_jd(self):
         actual = self.goesfile.table['Modified JD'][287]
         self.assertEqual(actual, 56350.99653)
-        
-        
         
