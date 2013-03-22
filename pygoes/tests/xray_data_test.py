@@ -1,6 +1,7 @@
 import unittest
 import os
 from atpy.basetable import Table
+from asciitable import InconsistentTableError
 from pygoes.xray.data import *
 
 TEST_ROOT = os.path.dirname(__file__)
@@ -109,6 +110,10 @@ class TestGoesFile(unittest.TestCase):
         test_file = os.path.join(TEST_ROOT, FILENAMES[0])
         self.assert_(GoesFile(test_file))
 
+    def test_empty_file(self):
+        test_file = os.path.join(TEST_ROOT, 'empty_file.txt')
+        with self.assertRaises(InconsistentTableError):
+            GoesFile(test_file)
 
 class TestGoesFileFormatting(unittest.TestCase):
     """ 
@@ -121,7 +126,7 @@ class TestGoesFileFormatting(unittest.TestCase):
 
     def test_file_length(self):
         self.assertEqual(self.glength, len(self.goes.table))
-
+        
     def test_original_column_names(self):
         expected = ['col1', 'col2', 'col3', 'col4', 
                     'col5', 'col6', 'col7', 'col8']
@@ -160,6 +165,24 @@ class TestGoesFileReading(unittest.TestCase):
         self.assertEqual(actual.datetime[0], start)
         self.assertEqual(len(actual), 7)
         self.assertEqual(actual.datetime[6], end)
+
+    def test_invalid_datetime_format(self):
+        start   = "invalid"
+        end     = "2013-02-27 01:00"
+        with self.assertRaises(ValueError):
+            self.goes.get_date_range(start, end)        
+
+    def test_invalid_datetime(self):
+        start   = "2013-02-27 23:50"
+        end     = "2013-02-27 24:55"
+        with self.assertRaises(ValueError):
+            self.goes.get_date_range(start, end)        
+
+    def test_start_is_after_the_end_datetime(self):
+        start   = "2013-02-27 23:50"
+        end     = "2013-02-27 23:40"
+        with self.assertRaises(ValueError):
+            self.goes.get_date_range(start, end)        
 
     def test_first_modified_jd(self):
         actual = self.goes.table['Modified JD'][0]

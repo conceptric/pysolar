@@ -127,8 +127,13 @@ class GoesFile:
         start   = first datetime to be retrieved
         end     = last datetime to be retrieved
         '''
+        start_time = datetime64(start)
+        end_time = datetime64(end)
+        if end_time < start_time: 
+            raise ValueError('The end time cannot be before you start')
+        
         datetimes = self.table.datetime.astype(datetime64)
-        starting = (datetimes >= datetime64(start))
-        ending = (datetimes <= datetime64(end))        
-        query = self.table.where(starting & ending)
+        
+        query = self.table.where(
+         (datetimes >= start_time) & (datetimes <= end_time))
         return query
