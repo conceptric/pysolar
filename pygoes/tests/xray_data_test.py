@@ -6,12 +6,11 @@ from pygoes.xray.data import *
 TEST_ROOT = os.path.dirname(__file__)
 FILENAMES =  ['20130227_Gp_xr_5m.txt', '20130228_Gp_xr_5m.txt']
 
-class TestGoesDataSet(unittest.TestCase):
+class TestDataSet(unittest.TestCase):
     """ 
-    Test the class to work with multiple 
-    GOES-15 X-Ray data files 
+    Test that the DataSet class exists and has
+    the correct attributes. 
     """
-    
     def setUp(self):
         self.dataset = GoesDataSet()
             
@@ -20,6 +19,23 @@ class TestGoesDataSet(unittest.TestCase):
 
     def test_has_empty_datafiles_attribute(self):
         self.assertEquals(self.dataset.datafiles, [])
+
+
+class TestDataSetCompile(unittest.TestCase):
+    """ 
+    Test that the DataSet class can import multiple 
+    GOES-15 X-Ray data files.
+    """
+    def setUp(self):
+        self.dataset = GoesDataSet()
+
+    def test_ignores_empty_file_list(self):
+        self.dataset.compile(TEST_ROOT, [])
+        self.assertEquals(0, len(self.dataset.datafiles))
+        
+    def test_ignores_incorrect_filename_in_list(self):
+        self.dataset.compile(TEST_ROOT, ['wrong_name.txt'])
+        self.assertEquals(0, len(self.dataset.datafiles))        
         
     def test_add_file_to_dataset(self):
         self.dataset.compile(TEST_ROOT, [FILENAMES[0]])
@@ -31,37 +47,36 @@ class TestGoesDataSet(unittest.TestCase):
         actual = len(self.dataset.datafiles)
         self.assertEquals(2, actual)
 
-class TestDataSetDateSorting(unittest.TestCase):
+
+class TestDataSetGetDateRanges(unittest.TestCase):
     """ 
     Test the methods for working with date ranges
     that spread over multiple files.
-    """
-    
+    """    
     def setUp(self):
         self.dataset = GoesDataSet()
+        self.dataset.compile(TEST_ROOT, FILENAMES)
         self.start   = "2013-02-27 23:50"
         self.end     = "2013-02-28 00:10"
         self.records = 5
     
     def test_returns_a_table(self):
-        self.dataset.compile(TEST_ROOT, FILENAMES)
         actual = self.dataset.get_date_range(self.start, self.end)
         self.assertIsInstance(actual, Table)
 
     def test_correct_number_of_records(self):
-        self.dataset.compile(TEST_ROOT, FILENAMES)
         actual = self.dataset.get_date_range(self.start, self.end)
         self.assertEqual(len(actual), self.records)
     
     def test_files_in_date_order(self):
-        self.dataset.compile(TEST_ROOT, FILENAMES)
         actual = self.dataset.get_date_range(self.start, self.end)
         self.assertEqual(actual.datetime[0], self.start)
         self.assertEqual(actual.datetime[self.records - 1], self.end)
 
     def test_files_not_in_date_order(self):
-        self.dataset.compile(TEST_ROOT, reversed(FILENAMES))
-        actual = self.dataset.get_date_range(self.start, self.end)
+        reversed_dataset = GoesDataSet()
+        reversed_dataset.compile(TEST_ROOT, reversed(FILENAMES))
+        actual = reversed_dataset.get_date_range(self.start, self.end)
         self.assertEqual(actual.datetime[0], self.start)
         self.assertEqual(actual.datetime[self.records - 1], self.end)
 
@@ -79,6 +94,10 @@ class TestGoesFile(unittest.TestCase):
     def test_requires_path(self):
         with self.assertRaises(Exception):
             GoesFile()
+
+    def test_incorrect_path(self):
+        with self.assertRaises(Exception):
+            GoesFile(os.path.join(test_root, 'wrong_filename.txt'))
 
     def test_exists(self):
         self.assert_(self.goesfile)

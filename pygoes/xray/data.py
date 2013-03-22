@@ -22,8 +22,11 @@ class GoesDataSet:
         files     = a list of the filename strings to import
         '''
         for file in files:
-            datafile = GoesFile(os.path.join(root_path, file))
-            self.datafiles.append(datafile)
+            try:
+                datafile = GoesFile(os.path.join(root_path, file))
+                self.datafiles.append(datafile)
+            except IOError:
+                pass
         
     def get_date_range(self, start, end):
         ''' 
