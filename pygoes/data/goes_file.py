@@ -2,6 +2,26 @@ import atpy
 from pygoes.utils.datetime import DateCompiler
 from numpy import datetime64
 
+XRAY_FIELDS =  {'col1': 'year',
+                'col2': 'month',
+                'col3': 'day', 
+                'col4': 'time',
+                'col5': 'JD days',
+                'col6': 'JD secs',
+                'col7': '0.05-0.4 nanometer (W/m2)',
+                'col8': '0.1-0.8 nanometer (W/m2)'}
+
+MAG_FIELDS =   {'col1': 'year',
+                'col2': 'month',
+                'col3': 'day', 
+                'col4': 'time',
+                'col5': 'JD days',
+                'col6': 'JD secs',
+                'col7': 'Hp (nT)',
+                'col8': 'He (nT)',
+                'col9': 'Hn (nT)',
+                'col10': 'Total Field (nT)'}
+
 class GoesFile:
     ''' 
     Class to represent a GOES data file using ATPy tables.
@@ -18,33 +38,11 @@ class GoesFile:
     The table attribute contains the ATPy table instance.       
 
     '''
-    
-    xray =  {'col1': 'year',
-             'col2': 'month',
-             'col3': 'day', 
-             'col4': 'time',
-             'col5': 'JD days',
-             'col6': 'JD secs',
-             'col7': '0.05-0.4 nanometer (W/m2)',
-             'col8': '0.1-0.8 nanometer (W/m2)'}
-
-    mag =   {'col1': 'year',
-             'col2': 'month',
-             'col3': 'day', 
-             'col4': 'time',
-             'col5': 'JD days',
-             'col6': 'JD secs',
-             'col7': 'Hp (nT)',
-             'col8': 'He (nT)',
-             'col9': 'Hn (nT)',
-             'col10': 'Total Field (nT)'}
-
-    
     def __init__(self, path, filetype='xray'):         
         if filetype == 'mag':
-            self.column_map = self.mag
+            self.column_map = MAG_FIELDS
         else:
-            self.column_map = self.xray        
+            self.column_map = XRAY_FIELDS        
         
         self.table = self.__read(path)
         self.__rename_columns()
@@ -108,3 +106,6 @@ class GoesFile:
         query = self.table.where(
          (datetimes >= start_time) & (datetimes <= end_time))
         return query
+        
+
+
