@@ -68,16 +68,33 @@ class GoesFile:
 
     '''
     
-    columns = {'col1': 'year',
-               'col2': 'month',
-               'col3': 'day', 
-               'col4': 'time',
-               'col5': 'JD days',
-               'col6': 'JD secs',
-               'col7': '0.05-0.4 nanometer (W/m2)',
-               'col8': '0.1-0.8 nanometer (W/m2)'}
+    xray =  {'col1': 'year',
+             'col2': 'month',
+             'col3': 'day', 
+             'col4': 'time',
+             'col5': 'JD days',
+             'col6': 'JD secs',
+             'col7': '0.05-0.4 nanometer (W/m2)',
+             'col8': '0.1-0.8 nanometer (W/m2)'}
+
+    mag =   {'col1': 'year',
+             'col2': 'month',
+             'col3': 'day', 
+             'col4': 'time',
+             'col5': 'JD days',
+             'col6': 'JD secs',
+             'col7': 'Hp (nT)',
+             'col8': 'He (nT)',
+             'col9': 'Hn (nT)',
+             'col10': 'Total Field (nT)'}
+
     
-    def __init__(self, path):         
+    def __init__(self, path, filetype='xray'):         
+        if filetype == 'mag':
+            self.column_map = self.mag
+        else:
+            self.column_map = self.xray        
+        
         self.table = self.__read(path)
         self.__rename_columns()
         self.__insert_new_columns()
@@ -85,12 +102,12 @@ class GoesFile:
     def __read(self, path):
         goes = atpy.Table(path, type="ascii", delimiter="\s", 
             header_start=None, data_start=2)
-        goes.keep_columns(self.columns.keys())
+        goes.keep_columns(self.get_column_map().keys())
         return goes
         
     def __rename_columns(self):
         " Renames the imported columns with something more descriptive "
-        for k, v in self.columns.iteritems():
+        for k, v in self.get_column_map().iteritems():
             if (k in self.table.names):
                 self.table.rename_column(k, v)        
 
@@ -116,6 +133,9 @@ class GoesFile:
         for row in self.table:
             stack.append(func(row))
         return stack
+
+    def get_column_map(self):
+        return self.column_map
 
     def get_date_range(self, start, end):
         ''' 
