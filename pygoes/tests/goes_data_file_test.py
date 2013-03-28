@@ -84,7 +84,7 @@ class TestAMagneticGoesFile(unittest.TestCase):
     Test that the GoesFile imports the Magnetometry data properly.
     """
     def setUp(self):
-        self.goes = GoesFile(os.path.join(TEST_ROOT, MAG), filetype='mag')
+        self.goes = GoesFile(os.path.join(TEST_ROOT, MAG), filetype='magnetic')
         self.glength = 1440
 
     def test_file_length(self):

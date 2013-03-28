@@ -39,7 +39,7 @@ class GoesFile:
 
     '''
     def __init__(self, path, filetype='xray'):         
-        if filetype == 'mag':
+        if filetype == 'magnetic':
             self.column_map = MAG_FIELDS
         else:
             self.column_map = XRAY_FIELDS        

@@ -24,8 +24,8 @@ class TestDataSet(unittest.TestCase):
         self.assertEquals(self.dataset.filetype, 'xray')
 
     def test_filetype_attribute_is_magnetic(self):
-        dataset = GoesDataSet('mag')
-        self.assertEquals(dataset.filetype, 'mag')
+        dataset = GoesDataSet('magnetic')
+        self.assertEquals(dataset.filetype, 'magnetic')
 
 
 class TestDataSetCompile(unittest.TestCase):
@@ -66,7 +66,7 @@ class TestDataSetCompileTypes(unittest.TestCase):
         self.assertIsNotNone(xray['0.1-0.8 nanometer (W/m2)'])
         
     def test_files_contain_magnetic_data(self):
-        dataset = GoesDataSet('mag')
+        dataset = GoesDataSet('magnetic')
         dataset.compile(TEST_ROOT, ['20130322_Gp_mag_1m.txt'])
         magnetic = dataset.datafiles[0].table
         self.assertIsNotNone(magnetic['Total Field (nT)'])
