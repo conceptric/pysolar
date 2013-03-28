@@ -4,7 +4,7 @@ from numpy import datetime64
 
 class GoesFile:
     ''' 
-    Class to represent a GOES-15 X-Ray data file using ATPy tables.
+    Class to represent a GOES data file using ATPy tables.
     
     On creation it reads the file data from the path, 
     sets meaningful names for existing table columns, 
