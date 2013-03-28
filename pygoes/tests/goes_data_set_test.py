@@ -1,7 +1,7 @@
 import unittest
 import os
 from atpy.basetable import Table
-from pygoes.xray.data import GoesDataSet
+from pygoes.data import GoesDataSet
 
 TEST_ROOT = os.path.dirname(__file__)
 FILENAMES =  ['20130227_Gp_xr_5m.txt', '20130228_Gp_xr_5m.txt']

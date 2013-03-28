@@ -1,4 +1,5 @@
 ''' 
-Library of functions to manipulate GOES-15 X-Ray data files.
+Library of functions to manipulate GOES data files.
 '''
 from goes_file import *
+from goes_data_set import *
