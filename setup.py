@@ -1,6 +1,6 @@
 from distutils.core import setup
 
-packages = ['pygoes', 'pygoes.utils', 'pygoes.xray']
+packages = ['pygoes', 'pygoes.utils', 'pygoes.xray', 'pygoes.data']
 required = ['atpy', 'numpy', 'matplotlib']
 
 setup(
