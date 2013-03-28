@@ -9,9 +9,10 @@ class GoesDataSet:
     datafiles: a list of the file object in the dataset
     '''    
     
-    def __init__(self):
+    def __init__(self, filetype='xray'):
         self.datafiles = []
-    
+        self.filetype = filetype
+        
     def compile(self, root_path, files):
         '''
         Imports the data files as GoesFile instances
@@ -21,7 +22,8 @@ class GoesDataSet:
         '''
         for file in files:
             try:
-                datafile = GoesFile(os.path.join(root_path, file))
+                datafile = GoesFile(os.path.join(root_path, file), 
+                    self.filetype)
                 self.datafiles.append(datafile)
             except IOError:
                 pass

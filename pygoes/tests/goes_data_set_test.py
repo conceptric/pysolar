@@ -20,6 +20,14 @@ class TestDataSet(unittest.TestCase):
     def test_has_empty_datafiles_attribute(self):
         self.assertEquals(self.dataset.datafiles, [])
 
+    def test_filetype_attribute_defaults_to_xray(self):
+        self.assertEquals(self.dataset.filetype, 'xray')
+
+    def test_filetype_attribute_is_magnetic(self):
+        dataset = GoesDataSet('mag')
+        self.assertEquals(dataset.filetype, 'mag')
+
+
 class TestDataSetCompile(unittest.TestCase):
     """ 
     Test that the DataSet class can import multiple 
@@ -45,6 +53,24 @@ class TestDataSetCompile(unittest.TestCase):
         self.dataset.compile(TEST_ROOT, FILENAMES)
         actual = len(self.dataset.datafiles)
         self.assertEquals(2, actual)
+
+
+class TestDataSetCompileTypes(unittest.TestCase):
+    '''
+    Test that the correct types of file are compiled.
+    '''        
+    def test_files_contain_xray_data(self):
+        dataset = GoesDataSet()
+        dataset.compile(TEST_ROOT, [FILENAMES[0]])
+        xray = dataset.datafiles[0].table
+        self.assertIsNotNone(xray['0.1-0.8 nanometer (W/m2)'])
+        
+    def test_files_contain_magnetic_data(self):
+        dataset = GoesDataSet('mag')
+        dataset.compile(TEST_ROOT, ['20130322_Gp_mag_1m.txt'])
+        magnetic = dataset.datafiles[0].table
+        self.assertIsNotNone(magnetic['Total Field (nT)'])
+
 
 class TestDataSetGetDateRanges(unittest.TestCase):
     """ 
