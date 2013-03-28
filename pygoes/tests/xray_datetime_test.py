@@ -1,5 +1,5 @@
 import unittest
-from pygoes.xray.datetime import DateCompiler
+from pygoes.utils.datetime import DateCompiler
 
 class TestDateCompilerDatetimes(unittest.TestCase):
     """ 

@@ -1,7 +1,7 @@
 import os
 import atpy
 from numpy import datetime64
-from pygoes.xray.datetime import DateCompiler
+from pygoes.utils.datetime import DateCompiler
 
 class GoesDataSet:
     '''
