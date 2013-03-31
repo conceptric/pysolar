@@ -2,37 +2,53 @@ import unittest
 import os
 
 from pygoes.remote.file_downloader import FileDownloader
+from pygoes.remote.file_downloader import FileDownloadSettings
 
 FIXTURES = os.path.join(os.path.dirname(__file__), 'fixtures')
-FILENAME = "Gp_xr_5m.txt"
 
-class TestFileDownloader(unittest.TestCase):
+class TestFileDownloadSettings(unittest.TestCase):
     """
-    Tests the class that downloads requested GOES data files
+    Tests a class to contain the download details and settings
     """
     def setUp(self):
-        source_path = "http://www.swpc.noaa.gov/ftpdir/lists/xray/"
-        self.source = source_path + FILENAME
-        self.destination = os.path.join(FIXTURES, FILENAME)        
-        self.downloader = FileDownloader(self.source, self.destination)
+        self.url = "http://example.com/filename.txt"
+        self.local_path = "/home/user/filename.txt"        
+        self.settings = FileDownloadSettings(self.url, self.local_path)
+
+    def test_that_the_settings_contain_the_source(self):
+        self.assertEquals(self.settings.source, self.url)
+
+    def test_that_the_settings_contain_the_complete_destination(self):
+        self.assertEquals(self.settings.destination, self.local_path)
+        
+    def test_without_arguments(self):
+        pass
+
+    def test_invalid_source_path(self):
+        pass
+        
+    def test_invalid_destination_path(self):
+        pass
+
+        
+class TestDownloadingRemoteFile(unittest.TestCase):
+    """
+    Tests the happy path of downloading a file successfully.
+    """    
+    def setUp(self):
+        url = "http://www.swpc.noaa.gov/ftpdir/lists/xray/Gp_xr_5m.txt"
+        self.local_path = os.path.join(FIXTURES, "Gp_xr_5m.txt")
+        valid_settings = FileDownloadSettings(url, self.local_path)
+        self.downloader = FileDownloader(valid_settings)
 
     def tearDown(self):
-        if os.path.exists(self.destination):
-            os.remove(self.destination)        
+        if os.path.exists(self.local_path):
+            os.remove(self.local_path)        
 
-    def test_that_the_downloader_knows_the_source(self):
-        self.assertEquals(self.downloader.source, self.source)
-
-    def test_that_the_downloader_knows_the_complete_destination(self):
-        self.assertEquals(self.downloader.destination, self.destination)
-        
-    def test_check_remote_file_exists(self):
-        self.assertTrue(self.downloader.remote_exists())
-        
-    def test_check_local_file_does_not_exist(self):
+    def test_there_is_no_existing_local_file(self):
         self.assertFalse(self.downloader.local_exists())
         
-    def test_file_downloaded(self):
+    def test_that_the_file__was_downloaded(self):
         self.downloader.download()
         self.assertTrue(self.downloader.local_exists())
         
