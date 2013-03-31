@@ -11,15 +11,23 @@ class FileDownloader:
 
     def remote_exists(self):
         try:
-            urllib2.urlopen(self.source)
+            remote = self.__open_remote()
             return True
         except urllib2.HTTPError:
             return False
+        finally:
+            remote.close()
+
+    def __open_remote(self):
+        return urllib2.urlopen(self.source)
 
     def local_exists(self):
         return os.path.exists(self.destination)
         
     def download(self):
         local = open(self.destination, 'w')
-        local.write(urllib2.urlopen(self.source).read())
+        remote = self.__open_remote()
+        local.write(remote.read())
+        remote.close()
         local.close()
+        

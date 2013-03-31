@@ -16,6 +16,10 @@ class TestFileDownloader(unittest.TestCase):
         self.destination = os.path.join(FIXTURES, FILENAME)        
         self.downloader = FileDownloader(self.source, self.destination)
 
+    def tearDown(self):
+        if os.path.exists(self.destination):
+            os.remove(self.destination)        
+
     def test_that_the_downloader_knows_the_source(self):
         self.assertEquals(self.downloader.source, self.source)
 
@@ -31,5 +35,4 @@ class TestFileDownloader(unittest.TestCase):
     def test_file_downloaded(self):
         self.downloader.download()
         self.assertTrue(self.downloader.local_exists())
-        os.remove(self.destination)
         
