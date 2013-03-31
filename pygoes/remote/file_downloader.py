@@ -16,3 +16,10 @@ class FileDownloader:
         except urllib2.HTTPError:
             return False
 
+    def local_exists(self):
+        return os.path.exists(self.destination)
+        
+    def download(self):
+        local = open(self.destination, 'w')
+        local.write(urllib2.urlopen(self.source).read())
+        local.close()

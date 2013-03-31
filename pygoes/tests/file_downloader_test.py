@@ -24,3 +24,12 @@ class TestFileDownloader(unittest.TestCase):
         
     def test_check_remote_file_exists(self):
         self.assertTrue(self.downloader.remote_exists())
+        
+    def test_check_local_file_does_not_exist(self):
+        self.assertFalse(self.downloader.local_exists())
+        
+    def test_file_downloaded(self):
+        self.downloader.download()
+        self.assertTrue(self.downloader.local_exists())
+        os.remove(self.destination)
+        
