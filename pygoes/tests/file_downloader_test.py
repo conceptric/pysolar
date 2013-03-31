@@ -4,16 +4,16 @@ import os
 from pygoes.remote.file_downloader import FileDownloader
 
 FIXTURES = os.path.join(os.path.dirname(__file__), 'fixtures')
+FILENAME = "Gp_xr_5m.txt"
 
 class TestFileDownloader(unittest.TestCase):
     """
     Tests the class that downloads requested GOES data files
     """
     def setUp(self):
-        filename = "Gp_xr_5m.txt"
         source_path = "http://www.swpc.noaa.gov/ftpdir/lists/xray/"
-        self.source = source_path + filename
-        self.destination = os.path.join(FIXTURES, filename)        
+        self.source = source_path + FILENAME
+        self.destination = os.path.join(FIXTURES, FILENAME)        
         self.downloader = FileDownloader(self.source, self.destination)
 
     def test_that_the_downloader_knows_the_source(self):
