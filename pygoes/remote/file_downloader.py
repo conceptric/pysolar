@@ -15,7 +15,7 @@ class MissingFileError(Exception):
     """ An error for when a file could not be found. """
     pass
 
-class FileDownloader:
+class NamedFileDownloader:
     """ 
     Class that downloads the requested file 
     """
