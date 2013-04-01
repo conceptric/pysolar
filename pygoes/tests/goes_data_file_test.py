@@ -18,11 +18,11 @@ class TestGoesFile(unittest.TestCase):
 
     def test_incorrect_path_filename(self):
         with self.assertRaises(IOError):
-            GoesFile(os.path.join(TEST_ROOT, 'wrong_filename.txt'))
+            GoesFile(os.path.join(FIXTURES, 'wrong_filename.txt'))
 
     def test_blank_path_filename(self):
         with self.assertRaises(IOError):
-            GoesFile(os.path.join(TEST_ROOT, ''))
+            GoesFile(os.path.join(FIXTURES, ''))
 
     def test_invalid_path_type(self):
         with self.assertRaises(IOError):
@@ -30,18 +30,18 @@ class TestGoesFile(unittest.TestCase):
 
     def test_incomplete_path(self):
         with self.assertRaises(IOError):
-            GoesFile(TEST_ROOT)
+            GoesFile(FIXTURES)
 
     def test_with_xray_file(self):
-        test_file = os.path.join(TEST_ROOT, XRAY)
+        test_file = os.path.join(FIXTURES, XRAY)
         self.assert_(GoesFile(test_file))
 
     def test_with_magnet_file(self):
-        test_file = os.path.join(TEST_ROOT, MAG)
+        test_file = os.path.join(FIXTURES, MAG)
         self.assert_(GoesFile(test_file))
 
     def test_empty_file(self):
-        test_file = os.path.join(TEST_ROOT, 'empty_file.txt')
+        test_file = os.path.join(FIXTURES, 'empty_file.txt')
         with self.assertRaises(InconsistentTableError):
             GoesFile(test_file)
 
@@ -50,7 +50,7 @@ class TestAnXrayGoesFile(unittest.TestCase):
     Test that the GoesFile imports the XRay data properly.
     """
     def setUp(self):
-        self.goes = GoesFile(os.path.join(TEST_ROOT, XRAY))
+        self.goes = GoesFile(os.path.join(FIXTURES, XRAY))
         self.glength = 288
 
     def test_file_length(self):
@@ -84,7 +84,7 @@ class TestAMagneticGoesFile(unittest.TestCase):
     Test that the GoesFile imports the Magnetometry data properly.
     """
     def setUp(self):
-        self.goes = GoesFile(os.path.join(TEST_ROOT, MAG), filetype='magnetic')
+        self.goes = GoesFile(os.path.join(FIXTURES, MAG), filetype='magnetic')
         self.glength = 1440
 
     def test_file_length(self):
@@ -121,7 +121,7 @@ class TestGoesFileGetDateRange(unittest.TestCase):
     date ranges.
     """        
     def setUp(self):
-        self.goes = GoesFile(os.path.join(TEST_ROOT, XRAY))
+        self.goes = GoesFile(os.path.join(FIXTURES, XRAY))
 
     def test_get_date_range(self):
         start   = "2013-02-27 00:30"
