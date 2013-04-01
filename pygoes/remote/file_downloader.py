@@ -1,5 +1,6 @@
 import os
 import urllib2
+from pygoes.utils.errors import MissingFileError
 
 class FileDownloadSettings:
     """ 
@@ -10,10 +11,6 @@ class FileDownloadSettings:
         self.source = url
         self.cache = cache_path
 
-
-class MissingFileError(Exception):
-    """ An error for when a file could not be found. """
-    pass
 
 class NamedFileDownloader:
     """ 
