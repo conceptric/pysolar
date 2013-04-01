@@ -1,26 +1,30 @@
 import urllib2
 from pygoes.utils.errors import MissingFileError
-from pygoes.remote.cache import CacheManager
 
-class NamedFileDownloader:
-    """ 
-    Class that downloads the requested file 
+class RemoteManager:
     """
-    def __init__(self, settings, cache_manager):
+    Class that represents a remote repository of data files.
+    """
+    def __init__(self, settings):
         self.url = settings.source
-        self.cache = cache_manager
 
-    def __open_remote(self, filename):
+    def open(self, filename):
         return urllib2.urlopen(self.url + '/' + filename)
-
-    def already_cached(self, filename):
-        return self.cache.file_exists(filename)
     
-    def read_remote(self, filename):
-        remote = self.__open_remote(filename)
+    def read(self, filename):
+        remote = self.open(filename)
         content = remote.read()        
         remote.close()        
         return content
+
+
+class NamedFileDownloader:
+    """ 
+    Class that downloads the requested file.
+    """
+    def __init__(self, remote_manager, cache_manager):
+        self.remote = remote_manager
+        self.cache = cache_manager
 
     def __handle_http_error(self, http_error, filename):
         if http_error.code == 404:
@@ -31,7 +35,7 @@ class NamedFileDownloader:
     def download(self, filename):
         if not self.cache.file_exists(filename):
             try:
-                remote = self.read_remote(filename)
+                remote = self.remote.read(filename)
                 self.cache.write_file(filename, remote)
             except urllib2.HTTPError as ex:
                 self.__handle_http_error(ex, filename)

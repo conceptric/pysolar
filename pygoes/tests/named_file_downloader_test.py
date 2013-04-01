@@ -4,6 +4,7 @@ from config import *
 from pygoes.configuration import FileDownloadSettings
 from pygoes.remote.file_downloader import NamedFileDownloader
 from pygoes.remote.cache import CacheManager
+from pygoes.remote.file_downloader import RemoteManager
 
 VALID_SETTINGS = FileDownloadSettings(REMOTE, FIXTURES)
         
@@ -20,11 +21,12 @@ class TestNamedFileDownloader(unittest.TestCase):
             os.remove(file_path)        
 
     def test_downloading_a_named_file(self):
-        downloader = NamedFileDownloader(VALID_SETTINGS, 
-            CacheManager(VALID_SETTINGS))
-        self.assertFalse(downloader.already_cached(self.filename))
+        cache_manager = CacheManager(VALID_SETTINGS)
+        remote_manager = RemoteManager(VALID_SETTINGS)
+        downloader = NamedFileDownloader(remote_manager, cache_manager)
+        self.assertFalse(cache_manager.file_exists(self.filename))
         downloader.download(self.filename)
-        self.assertTrue(downloader.already_cached(self.filename))
+        self.assertTrue(cache_manager.file_exists(self.filename))
 
 
 class TestMissingRemoteFile(unittest.TestCase):
@@ -35,7 +37,8 @@ class TestMissingRemoteFile(unittest.TestCase):
         missing = "missing.txt"
         expected_msg = missing + " is missing in the remote location."
         try:
-            NamedFileDownloader(VALID_SETTINGS, 
+            NamedFileDownloader(
+                RemoteManager(VALID_SETTINGS), 
                 CacheManager(VALID_SETTINGS)).download("missing.txt")
             self.assertFail()
         except Exception as ex:
@@ -50,7 +53,8 @@ class TestFileAlreadyCached(unittest.TestCase):
         existing = "existing_file.txt"
         cached = VALID_SETTINGS.cache + "/" + existing
         time1 = os.path.getmtime(cached)
-        NamedFileDownloader(VALID_SETTINGS, 
+        NamedFileDownloader(
+            RemoteManager(VALID_SETTINGS), 
             CacheManager(VALID_SETTINGS)).download(existing)
         time2 = os.path.getmtime(cached)
         self.assertEqual(time1, time2)
