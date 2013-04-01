@@ -1,6 +1,5 @@
 import unittest
 
-from config import *
 from pygoes.configuration import FileDownloadSettings
 
 class TestFileDownloadSettings(unittest.TestCase):

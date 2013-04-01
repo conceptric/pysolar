@@ -2,7 +2,7 @@ import unittest
 from atpy.basetable import Table
 from asciitable import InconsistentTableError
 
-from config import *
+from data_test_config import *
 from pygoes.data import GoesFile
 
 XRAY =  '20130227_Gp_xr_5m.txt'
