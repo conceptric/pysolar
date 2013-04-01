@@ -36,8 +36,9 @@ class NamedFileDownloader:
             raise        
             
     def download(self, filename):
-        try:
-            remote = self.read_remote(filename)
-            self.write_cached(filename, remote)
-        except urllib2.HTTPError as ex:
-            self.__handle_http_error(ex, filename)
+        if not self.already_cached(filename):
+            try:
+                remote = self.read_remote(filename)
+                self.write_cached(filename, remote)
+            except urllib2.HTTPError as ex:
+                self.__handle_http_error(ex, filename)
