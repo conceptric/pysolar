@@ -1,7 +1,7 @@
 import unittest
 
 from config import *
-from pygoes.remote.file_downloader import FileDownloadSettings
+from pygoes.configuration import FileDownloadSettings
 
 class TestFileDownloadSettings(unittest.TestCase):
     """

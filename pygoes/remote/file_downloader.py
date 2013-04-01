@@ -2,16 +2,6 @@ import os
 import urllib2
 from pygoes.utils.errors import MissingFileError
 
-class FileDownloadSettings:
-    """ 
-    Class that contains the details of a file 
-    to be downloaded 
-    """
-    def __init__(self, url, cache_path):
-        self.source = url
-        self.cache = cache_path
-
-
 class NamedFileDownloader:
     """ 
     Class that downloads the requested file 
