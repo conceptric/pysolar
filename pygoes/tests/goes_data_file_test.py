@@ -1,10 +1,10 @@
 import unittest
-import os
 from atpy.basetable import Table
 from asciitable import InconsistentTableError
+
+from config import *
 from pygoes.data import GoesFile
 
-TEST_ROOT = os.path.dirname(__file__)
 XRAY =  '20130227_Gp_xr_5m.txt'
 MAG =   '20130322_Gp_mag_1m.txt'
 
