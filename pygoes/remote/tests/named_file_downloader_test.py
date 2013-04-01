@@ -1,6 +1,6 @@
 import unittest
 
-from config import *
+from remote_test_config import *
 from pygoes.configuration import FileDownloadSettings
 from pygoes.remote.downloader import NamedFileDownloader
 from pygoes.remote.cache import CacheManager

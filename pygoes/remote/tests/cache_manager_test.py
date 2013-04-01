@@ -1,5 +1,5 @@
 import unittest
-from config import *
+from remote_test_config import *
 from pygoes.remote.cache import CacheManager
 
 class FakeSettings:

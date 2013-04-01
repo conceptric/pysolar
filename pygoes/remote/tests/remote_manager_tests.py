@@ -1,7 +1,7 @@
 import unittest
 from pygoes.utils.errors import MissingFileError
 
-from config import *
+from remote_test_config import *
 from pygoes.remote.repository import RemoteManager
 
 class FakeSettings:
