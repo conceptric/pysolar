@@ -19,11 +19,11 @@ class TestNamedFileDownloader(unittest.TestCase):
             os.remove(file_path)        
 
     def test_no_local_copy_of_named_file(self):
-        self.assertFalse(self.downloader.local_exists(self.filename))
+        self.assertFalse(self.downloader.already_cached(self.filename))
         
     def test_downloading_a_named_file(self):
         self.downloader.download("Gp_xr_5m.txt")
-        self.assertTrue(self.downloader.local_exists(self.filename))
+        self.assertTrue(self.downloader.already_cached(self.filename))
 
     def test_raises_error_if_remote_does_not_exist(self):
         missing = "missing.txt"
@@ -34,7 +34,7 @@ class TestNamedFileDownloader(unittest.TestCase):
         except Exception as ex:
             self.assertEquals(ex.message, expected_msg)
         finally:
-            self.assertFalse(self.downloader.local_exists(missing))
+            self.assertFalse(self.downloader.already_cached(missing))
 
 
 if __name__ == '__main__':

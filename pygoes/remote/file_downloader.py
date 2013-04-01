@@ -22,22 +22,13 @@ class NamedFileDownloader:
     def __init__(self, settings):
         self.settings = settings
 
-    def remote_exists(self):
-        try:
-            remote = self.__open_remote()
-            return True
-        except urllib2.HTTPError:
-            return False
-        finally:
-            remote.close()
-
     def __open_remote(self, filename):
         return urllib2.urlopen(self.settings.source + '/' + filename)
 
     def __path_to_cached_file(self, filename):
         return os.path.join(self.settings.cache, filename)
 
-    def local_exists(self, filename):
+    def already_cached(self, filename):
         return os.path.exists(self.__path_to_cached_file(filename))
         
     def download(self, filename):
