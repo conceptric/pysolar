@@ -29,26 +29,25 @@ class TestWriteFile(unittest.TestCase):
     def setUp(self):
         self.cache = CacheManager(FakeSettings())
         self.filename = "writing_test.txt"
+        self.content = "Original"
         self.file_path = os.path.join(FIXTURES, self.filename)
+        self.cache.write_file(self.filename, self.content)
         
     def tearDown(self):
         if os.path.exists(self.file_path):
             os.remove(self.file_path)
+    
+    def actual(self):
+        return open(self.file_path, 'r').read()
             
     def test_writing_to_new_file(self):
-        expected = "This is a test"
-        self.cache.write_file(self.filename, expected)
-        actual = open(self.file_path, 'r').read()
         self.assertTrue(self.cache.file_exists(self.filename))
-        self.assertEquals(actual, expected)
+        self.assertEquals(self.actual(), self.content)
 
     def test_existing_file_cannot_be_overwritten(self):
-        expected = "Original"
-        self.cache.write_file(self.filename, expected)
         self.cache.write_file(self.filename, "Overwritten")
-        actual = open(self.file_path, 'r').read()
         self.assertTrue(self.cache.file_exists(self.filename))
-        self.assertEquals(actual, expected)
+        self.assertEquals(self.actual(), self.content)
         
     def test_raises_exception_with_invalid_path(self):
         with self.assertRaises(IOError):
