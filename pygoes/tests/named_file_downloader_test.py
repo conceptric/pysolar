@@ -4,7 +4,7 @@ from config import *
 from pygoes.configuration import FileDownloadSettings
 from pygoes.remote.file_downloader import NamedFileDownloader
 from pygoes.remote.cache import CacheManager
-from pygoes.remote.file_downloader import RemoteManager
+from pygoes.remote.repository import RemoteManager
 
 VALID_SETTINGS = FileDownloadSettings(REMOTE, FIXTURES)
         
