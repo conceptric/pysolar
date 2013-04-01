@@ -1,33 +1,17 @@
-import os
 import urllib2
 from pygoes.utils.errors import MissingFileError
-
-class CacheManager:
-    """
-    Class to manage the local data file cache.
-    """
-    def __init__(self, settings):
-        self.path = settings.cache
-
-    def file_exists(self, filename):
-        return os.path.exists(os.path.join(self.path, filename))
-        
-    def write_file(self, filename, data):
-        cache = open(os.path.join(self.path, filename), 'w')
-        cache.write(data)
-        cache.close()
-            
+from pygoes.remote.cache import CacheManager
 
 class NamedFileDownloader:
     """ 
     Class that downloads the requested file 
     """
     def __init__(self, settings):
-        self.settings = settings
+        self.url = settings.source
         self.cache = CacheManager(settings)
 
     def __open_remote(self, filename):
-        return urllib2.urlopen(self.settings.source + '/' + filename)
+        return urllib2.urlopen(self.url + '/' + filename)
 
     def already_cached(self, filename):
         return self.cache.file_exists(filename)
