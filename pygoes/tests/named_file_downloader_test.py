@@ -12,18 +12,15 @@ class TestNamedFileDownloader(unittest.TestCase):
     """    
     def setUp(self):
         self.filename = "Gp_xr_5m.txt"
-        self.downloader = NamedFileDownloader(VALID_SETTINGS)
 
     def tearDown(self):
         file_path = os.path.join(FIXTURES, self.filename)
         if os.path.exists(file_path):
             os.remove(file_path)        
 
-    def test_no_cached_copy_of_named_file(self):
-        self.assertFalse(self.downloader.already_cached(self.filename))
-        
     def test_downloading_a_named_file(self):
-        self.downloader.download(self.filename)
+        self.assertFalse(self.downloader.already_cached(self.filename))
+        NamedFileDownloader(VALID_SETTINGS).download(self.filename)
         self.assertTrue(self.downloader.already_cached(self.filename))
 
 
