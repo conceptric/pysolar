@@ -3,6 +3,7 @@ import unittest
 from config import *
 from pygoes.configuration import FileDownloadSettings
 from pygoes.remote.file_downloader import NamedFileDownloader
+from pygoes.remote.cache import CacheManager
 
 VALID_SETTINGS = FileDownloadSettings(REMOTE, FIXTURES)
         
@@ -19,7 +20,8 @@ class TestNamedFileDownloader(unittest.TestCase):
             os.remove(file_path)        
 
     def test_downloading_a_named_file(self):
-        downloader = NamedFileDownloader(VALID_SETTINGS)
+        downloader = NamedFileDownloader(VALID_SETTINGS, 
+            CacheManager(VALID_SETTINGS))
         self.assertFalse(downloader.already_cached(self.filename))
         downloader.download(self.filename)
         self.assertTrue(downloader.already_cached(self.filename))
@@ -33,7 +35,8 @@ class TestMissingRemoteFile(unittest.TestCase):
         missing = "missing.txt"
         expected_msg = missing + " is missing in the remote location."
         try:
-            NamedFileDownloader(VALID_SETTINGS).download("missing.txt")
+            NamedFileDownloader(VALID_SETTINGS, 
+                CacheManager(VALID_SETTINGS)).download("missing.txt")
             self.assertFail()
         except Exception as ex:
             self.assertEquals(ex.message, expected_msg)
@@ -47,7 +50,8 @@ class TestFileAlreadyCached(unittest.TestCase):
         existing = "existing_file.txt"
         cached = VALID_SETTINGS.cache + "/" + existing
         time1 = os.path.getmtime(cached)
-        NamedFileDownloader(VALID_SETTINGS).download(existing)
+        NamedFileDownloader(VALID_SETTINGS, 
+            CacheManager(VALID_SETTINGS)).download(existing)
         time2 = os.path.getmtime(cached)
         self.assertEqual(time1, time2)
 

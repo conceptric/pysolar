@@ -6,9 +6,9 @@ class NamedFileDownloader:
     """ 
     Class that downloads the requested file 
     """
-    def __init__(self, settings):
+    def __init__(self, settings, cache_manager):
         self.url = settings.source
-        self.cache = CacheManager(settings)
+        self.cache = cache_manager
 
     def __open_remote(self, filename):
         return urllib2.urlopen(self.url + '/' + filename)
