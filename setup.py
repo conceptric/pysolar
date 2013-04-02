@@ -4,7 +4,7 @@ packages = ['pygoes',
             'pygoes.utils', 
             'pygoes.data', 
             'pygoes.remote', 
-            'pygoes.xray']
+            'pygoes.visualisation']
 required = ['atpy', 'numpy', 'matplotlib']
 
 setup(
