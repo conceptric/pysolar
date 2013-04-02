@@ -15,3 +15,7 @@ class DownloadManager:
         if not self.cache.file_exists(filename):
             remote = self.remote.read(filename)
             self.cache.write_file(filename, remote)
+
+    def files_by_name(self, filenames):
+        for file in filenames:
+            self.download(file)

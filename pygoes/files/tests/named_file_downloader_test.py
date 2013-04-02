@@ -1,10 +1,7 @@
 import unittest
 
 from remote_test_config import *
-from pygoes.configuration import FileDownloadSettings
 from pygoes.files.downloader import DownloadManager
-from pygoes.files.cache import CacheManager
-from pygoes.files.repository import RemoteManager
 
 class MockRemoteConfig:
     def __init__(self):
@@ -17,17 +14,26 @@ class TestDownloadManager(unittest.TestCase):
     Tests the happy path of downloading a file successfully.
     """    
     def setUp(self):
-        self.filename = "Gp_xr_5m.txt"
-        self.file_path = os.path.join(FIXTURES, self.filename)
-        self.assertFalse(os.path.exists(self.file_path))
+        self.files = ("Gp_xr_1m.txt", "Gp_xr_5m.txt")
+        self.config = MockRemoteConfig()
+        self.downloader = DownloadManager(self.config)
+        for file in self.files:
+            path = os.path.join(self.config.cache, file)
+            self.assertFalse(os.path.exists(path))
 
-    def test_downloading_a_named_file(self):
-        downloader = DownloadManager(MockRemoteConfig())
-        downloader.download(self.filename)
-        os.remove(self.file_path)        
-
-
-class TestMissingRemoteFile(unittest.TestCase):
+    def test_downloading_a_single_named_file(self):
+        file = self.files[0]
+        self.downloader.download(file)
+        os.remove(os.path.join(self.config.cache, file))
+        
+    def test_downloading_two_named_files(self):
+        self.downloader.files_by_name(self.files)
+        for file in self.files:
+            path = os.path.join(self.config.cache, file)
+            os.remove(path)        
+        
+        
+class TestWhenRemoteFileIsMissing(unittest.TestCase):
     """
     Tests what happens when the remote file is missing.
     """    
