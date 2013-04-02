@@ -22,9 +22,7 @@ class TestDownloadManager(unittest.TestCase):
         self.assertFalse(os.path.exists(self.file_path))
 
     def test_downloading_a_named_file(self):
-        cache_manager = CacheManager(MockRemoteConfig())
-        remote_manager = RemoteManager(MockRemoteConfig())
-        downloader = DownloadManager(remote_manager, cache_manager)
+        downloader = DownloadManager(MockRemoteConfig())
         downloader.download(self.filename)
         os.remove(self.file_path)        
 
@@ -37,9 +35,7 @@ class TestMissingRemoteFile(unittest.TestCase):
         missing = "missing.txt"
         expected_msg = missing + " is missing in the remote location."
         try:
-            DownloadManager(
-                RemoteManager(MockRemoteConfig()), 
-                CacheManager(MockRemoteConfig())).download("missing.txt")
+            DownloadManager(MockRemoteConfig()).download("missing.txt")
             self.assertFail()
         except Exception as ex:
             self.assertEquals(ex.message, expected_msg)
@@ -53,9 +49,7 @@ class TestFileAlreadyCached(unittest.TestCase):
         existing = "existing_file.txt"
         cached = MockRemoteConfig().cache + "/" + existing
         time1 = os.path.getmtime(cached)
-        DownloadManager(
-            RemoteManager(MockRemoteConfig()), 
-            CacheManager(MockRemoteConfig())).download(existing)
+        DownloadManager(MockRemoteConfig()).download(existing)
         time2 = os.path.getmtime(cached)
         self.assertEqual(time1, time2)
 
