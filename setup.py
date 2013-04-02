@@ -3,7 +3,7 @@ from distutils.core import setup
 packages = ['pygoes', 
             'pygoes.utils', 
             'pygoes.data', 
-            'pygoes.remote', 
+            'pygoes.files', 
             'pygoes.visualisation']
 required = ['atpy', 'numpy', 'matplotlib']
 

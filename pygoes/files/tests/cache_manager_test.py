@@ -1,6 +1,6 @@
 import unittest
 from remote_test_config import *
-from pygoes.remote.cache import CacheManager
+from pygoes.files.cache import CacheManager
 
 class FakeSettings:
     cache = FIXTURES

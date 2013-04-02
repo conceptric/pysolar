@@ -2,9 +2,9 @@ import unittest
 
 from remote_test_config import *
 from pygoes.configuration import FileDownloadSettings
-from pygoes.remote.downloader import NamedFileDownloader
-from pygoes.remote.cache import CacheManager
-from pygoes.remote.repository import RemoteManager
+from pygoes.files.downloader import NamedFileDownloader
+from pygoes.files.cache import CacheManager
+from pygoes.files.repository import RemoteManager
 
 VALID_SETTINGS = FileDownloadSettings(REMOTE, FIXTURES)
         
