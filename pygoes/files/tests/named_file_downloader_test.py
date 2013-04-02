@@ -2,31 +2,31 @@ import unittest
 
 from remote_test_config import *
 from pygoes.configuration import FileDownloadSettings
-from pygoes.files.downloader import NamedFileDownloader
+from pygoes.files.downloader import DownloadManager
 from pygoes.files.cache import CacheManager
 from pygoes.files.repository import RemoteManager
 
-VALID_SETTINGS = FileDownloadSettings(REMOTE, FIXTURES)
+class MockRemoteConfig:
+    def __init__(self):
+        self.source = REMOTE
+        self.cache = FIXTURES
+        self.file_template = "%s_Gp_xr_5m.txt"
         
-class TestNamedFileDownloader(unittest.TestCase):
+class TestDownloadManager(unittest.TestCase):
     """
     Tests the happy path of downloading a file successfully.
     """    
     def setUp(self):
         self.filename = "Gp_xr_5m.txt"
-
-    def tearDown(self):
-        file_path = os.path.join(FIXTURES, self.filename)
-        if os.path.exists(file_path):
-            os.remove(file_path)        
+        self.file_path = os.path.join(FIXTURES, self.filename)
+        self.assertFalse(os.path.exists(self.file_path))
 
     def test_downloading_a_named_file(self):
-        cache_manager = CacheManager(VALID_SETTINGS)
-        remote_manager = RemoteManager(VALID_SETTINGS)
-        downloader = NamedFileDownloader(remote_manager, cache_manager)
-        self.assertFalse(cache_manager.file_exists(self.filename))
+        cache_manager = CacheManager(MockRemoteConfig())
+        remote_manager = RemoteManager(MockRemoteConfig())
+        downloader = DownloadManager(remote_manager, cache_manager)
         downloader.download(self.filename)
-        self.assertTrue(cache_manager.file_exists(self.filename))
+        os.remove(self.file_path)        
 
 
 class TestMissingRemoteFile(unittest.TestCase):
@@ -37,9 +37,9 @@ class TestMissingRemoteFile(unittest.TestCase):
         missing = "missing.txt"
         expected_msg = missing + " is missing in the remote location."
         try:
-            NamedFileDownloader(
-                RemoteManager(VALID_SETTINGS), 
-                CacheManager(VALID_SETTINGS)).download("missing.txt")
+            DownloadManager(
+                RemoteManager(MockRemoteConfig()), 
+                CacheManager(MockRemoteConfig())).download("missing.txt")
             self.assertFail()
         except Exception as ex:
             self.assertEquals(ex.message, expected_msg)
@@ -51,11 +51,11 @@ class TestFileAlreadyCached(unittest.TestCase):
     """    
     def test_does_nothing_if_cached_copy_exists(self):
         existing = "existing_file.txt"
-        cached = VALID_SETTINGS.cache + "/" + existing
+        cached = MockRemoteConfig().cache + "/" + existing
         time1 = os.path.getmtime(cached)
-        NamedFileDownloader(
-            RemoteManager(VALID_SETTINGS), 
-            CacheManager(VALID_SETTINGS)).download(existing)
+        DownloadManager(
+            RemoteManager(MockRemoteConfig()), 
+            CacheManager(MockRemoteConfig())).download(existing)
         time2 = os.path.getmtime(cached)
         self.assertEqual(time1, time2)
 

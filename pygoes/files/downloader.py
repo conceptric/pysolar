@@ -1,9 +1,9 @@
 import urllib2
 from pygoes.utils.errors import MissingFileError
 
-class NamedFileDownloader:
+class DownloadManager:
     """ 
-    Class that downloads the requested file.
+    Coordinator class for the files package downloads
     """
     def __init__(self, remote_manager, cache_manager):
         self.remote = remote_manager
