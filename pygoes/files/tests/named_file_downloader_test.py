@@ -7,25 +7,23 @@ class MockRemoteConfig:
     def __init__(self):
         self.source = REMOTE
         self.cache = FIXTURES
-        self.file_template = "%s_Gp_xr_5m.txt"
+        self.file_template = "Gp_xr_%sm.txt"
 
-class TestDownloadingFilesFromDates(unittest.TestCase):
+class TestFilesNamesFromDatesAndTemplates(unittest.TestCase):
     """
-    Tests the happy path of downloading files 
-    for defined date strings successfully.
+    Tests creating file names with a configuration template.
     """    
-    def test_generating_filenames_from_date_strings(self):
+    def test_generating_filenames_from_template(self):
         dates = ('20100101', '20100102')
-        expected = ['20100101_Gp_xr_5m.txt', '20100102_Gp_xr_5m.txt']
+        expected = ['Gp_xr_20100101m.txt', 'Gp_xr_20100102m.txt']
         downloader = DownloadManager(MockRemoteConfig())
-        actual = downloader.filenames_from_dates(dates)
+        actual = downloader.filenames_from_template(dates)
         self.assertEquals(expected, actual)
         
         
-class TestDownloadingNamedFiles(unittest.TestCase):
+class TestDownloadingFiles(unittest.TestCase):
     """
-    Tests the happy path of downloading named 
-    files successfully.
+    Tests the happy path of downloading files successfully.
     """    
     def setUp(self):
         self.files = ("Gp_xr_1m.txt", "Gp_xr_5m.txt")
@@ -45,7 +43,10 @@ class TestDownloadingNamedFiles(unittest.TestCase):
         for file in self.files:
             path = os.path.join(self.config.cache, file)
             os.remove(path)        
-        
+
+    def test_downloading_a_single_file_with_template(self):        
+        self.downloader.files_by_template('1')
+        os.remove(os.path.join(self.config.cache, self.files[0]))
         
 class TestWhenRemoteFileIsMissing(unittest.TestCase):
     """

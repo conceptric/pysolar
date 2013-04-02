@@ -20,6 +20,10 @@ class DownloadManager:
     def files_by_name(self, filenames):
         for file in filenames:
             self.download(file)
-            
-    def filenames_from_dates(self, dates):
-        return map(lambda f: self.template % (f), dates)
+
+    def files_by_template(self, strings):
+        filenames = self.filenames_from_template(strings)
+        self.files_by_name(filenames)        
+        
+    def filenames_from_template(self, strings):
+        return map(lambda f: self.template % (f), strings)
