@@ -8,10 +8,24 @@ class MockRemoteConfig:
         self.source = REMOTE
         self.cache = FIXTURES
         self.file_template = "%s_Gp_xr_5m.txt"
-        
-class TestDownloadManager(unittest.TestCase):
+
+class TestDownloadingFilesFromDates(unittest.TestCase):
     """
-    Tests the happy path of downloading a file successfully.
+    Tests the happy path of downloading files 
+    for defined date strings successfully.
+    """    
+    def test_generating_filenames_from_date_strings(self):
+        dates = ('20100101', '20100102')
+        expected = ['20100101_Gp_xr_5m.txt', '20100102_Gp_xr_5m.txt']
+        downloader = DownloadManager(MockRemoteConfig())
+        actual = downloader.filenames_from_dates(dates)
+        self.assertEquals(expected, actual)
+        
+        
+class TestDownloadingNamedFiles(unittest.TestCase):
+    """
+    Tests the happy path of downloading named 
+    files successfully.
     """    
     def setUp(self):
         self.files = ("Gp_xr_1m.txt", "Gp_xr_5m.txt")

@@ -10,6 +10,7 @@ class DownloadManager:
     def __init__(self, config):
         self.remote = RemoteManager(config)
         self.cache = CacheManager(config)
+        self.template = config.file_template
 
     def download(self, filename):
         if not self.cache.file_exists(filename):
@@ -19,3 +20,6 @@ class DownloadManager:
     def files_by_name(self, filenames):
         for file in filenames:
             self.download(file)
+            
+    def filenames_from_dates(self, dates):
+        return map(lambda f: self.template % (f), dates)
