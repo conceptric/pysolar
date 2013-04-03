@@ -9,8 +9,6 @@ class RemoteManager:
     config: An instance of the Configuration class.
     """
     def __init__(self, config):
-        ''' Raises a URLError is the url is unknown. '''
-        urllib2.urlopen(urllib2.Request(config.source))
         self.url = config.source
 
     def read(self, filename):
@@ -25,6 +23,7 @@ class RemoteManager:
             return content
 
     def __open(self, filename):
+        ''' Raises a URLError is the url is unknown. '''
         try:
             return urllib2.urlopen(self.url + '/' + filename)
         except urllib2.HTTPError as ex:

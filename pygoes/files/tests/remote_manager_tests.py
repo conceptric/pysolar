@@ -20,14 +20,6 @@ class TestRemoteManager(unittest.TestCase):
         with self.assertRaises(TypeError):
             RemoteManager()
 
-    def test_raises_error_with_local_path_for_url(self):
-        with self.assertRaises(ValueError):
-            RemoteManager(FakeConfig(FIXTURES))
-
-    def tests_raises_error_when_url_is_not_known(self):
-        with self.assertRaises(URLError):
-            RemoteManager(FakeConfig('http://'))
-
 
 class TestReadingRemoteFiles(unittest.TestCase):
     """
@@ -35,6 +27,16 @@ class TestReadingRemoteFiles(unittest.TestCase):
     """
     def setUp(self):
         self.remote = RemoteManager(FakeConfig())
+
+    def test_raises_error_with_local_path_for_url(self):
+        with self.assertRaises(ValueError):
+            local = RemoteManager(FakeConfig(FIXTURES))
+            local.read("Gp_xr_5m.txt")
+
+    def tests_raises_error_when_url_is_not_known(self):
+        with self.assertRaises(URLError):
+            local = RemoteManager(FakeConfig('http://'))
+            local.read("Gp_xr_5m.txt")
     
     def test_read_existing_remote_file(self):
         '''
