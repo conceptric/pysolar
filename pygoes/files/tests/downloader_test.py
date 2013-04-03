@@ -22,20 +22,6 @@ class TestSingleFileDownload(unittest.TestCase):
         self.downloader.download(filename)
         os.remove(get_cached_path(filename))
         
-    def test_raises_error_with_useful_message(self):
-        '''
-        The Downloader raises a helpful message when trying 
-        to download a named file that is unavailable in the 
-        remote location.
-        '''
-        filename = "missing.txt"
-        message = "%s is missing in the remote location." % (filename)
-        try:
-            self.downloader.download(filename)
-            self.assertFail()
-        except Exception as ex:
-            self.assertEquals(ex.message, message)
-            
     def test_does_nothing_if_cached_copy_exists(self):
         """
         The Downloader does nothing when trying to download 
