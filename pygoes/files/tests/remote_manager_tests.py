@@ -1,5 +1,4 @@
 import unittest
-from pygoes.utils.errors import MissingFileError
 
 from remote_test_config import *
 from pygoes.files.repository import RemoteManager
@@ -33,5 +32,5 @@ class TestRemoteManager(unittest.TestCase):
         try:
             self.remote.read(filename)
             self.assertFail()
-        except MissingFileError as ex:
+        except Exception as ex:
             self.assertEquals(ex.message, message)        

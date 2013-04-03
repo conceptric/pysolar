@@ -3,78 +3,39 @@ import unittest
 from remote_test_config import *
 from pygoes.files.downloader import DownloadManager
 
-class MockRemoteConfig:
-    def __init__(self):
-        self.source = REMOTE
-        self.cache = FIXTURES
-        self.file_template = "Gp_xr_%sm.txt"
-
-class TestFilesNamesFromDatesAndTemplates(unittest.TestCase):
+class TestDownloadManager(unittest.TestCase):
     """
-    Tests creating file names with a configuration template.
-    """    
-    def test_generating_filenames_from_template(self):
-        dates = ('20100101', '20100102')
-        expected = ['Gp_xr_20100101m.txt', 'Gp_xr_20100102m.txt']
-        downloader = DownloadManager(MockRemoteConfig())
-        actual = downloader.filenames_from_template(dates)
-        self.assertEquals(expected, actual)
-        
-        
-class TestDownloadingFiles(unittest.TestCase):
-    """
-    Tests the happy path of downloading files successfully.
+    Tests the class that handles download tasks that 
+    are more complex than a single named file.
     """    
     def setUp(self):
         self.files = ("Gp_xr_1m.txt", "Gp_xr_5m.txt")
         self.config = MockRemoteConfig()
-        self.downloader = DownloadManager(self.config)
+        self.dmanager = DownloadManager(self.config)
         for file in self.files:
             path = os.path.join(self.config.cache, file)
             self.assertFalse(os.path.exists(path))
 
-    def test_downloading_a_single_named_file(self):
-        file = self.files[0]
-        self.downloader.download(file)
-        os.remove(os.path.join(self.config.cache, file))
-        
     def test_downloading_two_named_files(self):
-        self.downloader.files_by_name(self.files)
+        self.dmanager.files_by_name(self.files)
         for file in self.files:
             path = os.path.join(self.config.cache, file)
             os.remove(path)        
 
     def test_downloading_a_single_file_with_template(self):        
-        self.downloader.files_by_template('1')
+        self.dmanager.files_by_template('1')
         os.remove(os.path.join(self.config.cache, self.files[0]))
+
+    def test_generating_filenames_from_template(self):
+        """
+        Uses the configuration template to generate filename 
+        strings for the list of supplied strings.
+        """    
+        strings = ('20100101', '20100102')
+        expected = ['Gp_xr_20100101m.txt', 'Gp_xr_20100102m.txt']
+        actual = self.dmanager.filenames_from_template(strings)
+        self.assertEquals(expected, actual)
         
-class TestWhenRemoteFileIsMissing(unittest.TestCase):
-    """
-    Tests what happens when the remote file is missing.
-    """    
-    def test_raises_error_with_useful_message(self):
-        missing = "missing.txt"
-        expected_msg = missing + " is missing in the remote location."
-        try:
-            DownloadManager(MockRemoteConfig()).download("missing.txt")
-            self.assertFail()
-        except Exception as ex:
-            self.assertEquals(ex.message, expected_msg)
-
-
-class TestFileAlreadyCached(unittest.TestCase):
-    """
-    Tests what happens when the remote file has already been cached.
-    """    
-    def test_does_nothing_if_cached_copy_exists(self):
-        existing = "existing_file.txt"
-        cached = MockRemoteConfig().cache + "/" + existing
-        time1 = os.path.getmtime(cached)
-        DownloadManager(MockRemoteConfig()).download(existing)
-        time2 = os.path.getmtime(cached)
-        self.assertEqual(time1, time2)
-
-
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,22 +1,40 @@
 import urllib2
-from pygoes.utils.errors import MissingFileError
 from repository import RemoteManager
 from cache import CacheManager
+
+class Downloader:
+    """
+    Downloads named files from a specified remote location.
+    config: An instance of the Configuration class.
+    """
+    def __init__(self, config):
+        self.remote = RemoteManager(config)
+        self.cache = CacheManager(config)
+
+    def download(self, filename):
+        ''' 
+        Downloads a single named file from a remote location. 
+        Takes a string for the filename.
+        '''
+        if not self.cache.file_exists(filename):
+            remote = self.remote.read(filename)
+            self.cache.write_file(filename, remote)
 
 class DownloadManager:
     """ 
     Coordinator class for the files package downloads
     """
     def __init__(self, config):
-        self.remote = RemoteManager(config)
-        self.cache = CacheManager(config)
+        self.downloader = Downloader(config)
         self.template = config.file_template
 
     def download(self, filename):
-        if not self.cache.file_exists(filename):
-            remote = self.remote.read(filename)
-            self.cache.write_file(filename, remote)
-
+        ''' 
+        Delegates this method to be Downloader class. Takes 
+        a filename string.
+        '''
+        self.downloader.download(filename)
+        
     def files_by_name(self, filenames):
         for file in filenames:
             self.download(file)
