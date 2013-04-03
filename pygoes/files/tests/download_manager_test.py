@@ -1,4 +1,5 @@
 import unittest
+from mock import *
 
 from remote_test_config import *
 from pygoes.files.downloader import DownloadManager
@@ -6,36 +7,82 @@ from pygoes.files.downloader import Downloader
 
 class TestDownloadManager(unittest.TestCase):
     """
-    Tests the class that handles download tasks that 
-    are more complex than a single named file.
+    Tests the construction of an instance of the class.
     """    
     def setUp(self):
-        self.files = ("Gp_xr_1m.txt", "Gp_xr_5m.txt")
         self.config = MockRemoteConfig()
-        self.dmanager = DownloadManager(Downloader(self.config), self.config)
-        for afile in self.files:
-            path = os.path.join(self.config.cache, afile)
-            self.assertFalse(cached_file_exists(afile))
+
+    def test_raises_exception_without_config(self):
+        with self.assertRaises(TypeError):
+            DownloadManager()
+
+    def test_downloader_is_optional(self):
+        dm = DownloadManager(self.config)
+        self.assertTrue(dm.downloader)
+
+    def test_a_downloader_can_be_injected(self):
+        downloader = Downloader(self.config)
+        dm = DownloadManager(config=self.config, downloader=downloader)
+        self.assertEqual(dm.downloader, downloader)
+
+class TestMultipleFileDownloadQueries(unittest.TestCase):
+    """
+    Tests the class can construct download processes for 
+    multiple remote files.
+    """    
+    def setUp(self):
+        self.dmanager = DownloadManager(MockRemoteConfig())
+        self.dmanager.download = MagicMock()
+        
+    def test_download_call_is_successfully_mocked(self):
+        ''' Sanity check for Mock '''
+        self.assertTrue(self.dmanager.downloader)
+        self.assertIsInstance(self.dmanager.download, MagicMock)
 
     def test_downloading_two_named_files(self):
-        self.dmanager.files_by_name(self.files)
-        for afile in self.files:
-            os.remove(get_cached_path(afile))        
+        """
+        Tests downloads multiple files based on file names strings.
+        """    
+        files = ("Gp_xr_1m.txt", "Gp_xr_5m.txt")
+        expected = [call(files[0]), call(files[1])]
+        self.dmanager.files_by_name(files)
+        self.assertEqual(expected, self.dmanager.download.call_args_list)
 
     def test_downloading_a_single_file_with_template(self):        
+        """
+        Tests downloads a single file based on a template 
+        generated name.
+        """    
         self.dmanager.files_by_template('1')
-        os.remove(os.path.join(self.config.cache, self.files[0]))
+        self.dmanager.download.assert_called_once_with('Gp_xr_1m.txt')
 
-    def test_generating_filenames_from_template(self):
+    def test_downloading_two_files_with_template(self):
+        """
+        Tests downloads multiple files based on template 
+        generated names.
+        """    
+        strings = ('1', '2')
+        expected = [call('Gp_xr_1m.txt'), call('Gp_xr_2m.txt')]
+        self.dmanager.files_by_template(strings)
+        self.assertEqual(expected, self.dmanager.download.call_args_list)
+
+
+class TestApplyingFilenameTemplate(unittest.TestCase):
+    """
+    Tests the class can construct filenames using the 
+    template in the configuration.
+    """    
+    def test_generating_two_filenames_from_template(self):
         """
         Uses the configuration template to generate filename 
         strings for the list of supplied strings.
         """    
-        strings = ('20100101', '20100102')
-        expected = ['Gp_xr_20100101m.txt', 'Gp_xr_20100102m.txt']
-        actual = self.dmanager.filenames_from_template(strings)
+        strings = ('1', '2')
+        expected = ['Gp_xr_1m.txt', 'Gp_xr_2m.txt']
+        dm = DownloadManager(MockRemoteConfig())
+        actual = dm.filenames_from_template(strings)
         self.assertEquals(expected, actual)
-        
 
+        
 if __name__ == '__main__':
     unittest.main()

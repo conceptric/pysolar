@@ -23,11 +23,14 @@ class Downloader:
 class DownloadManager:
     """ 
     Builds more complex file download behaviours.
-    downloader: An instance of the Downloader class.
     config: An instance of the Configuration class.
+    optional downloader: An instance of the Downloader class.
     """
-    def __init__(self, downloader, config):
-        self.downloader = downloader
+    def __init__(self, config, downloader=None):
+        if downloader:
+            self.downloader = downloader
+        else:
+            self.downloader = Downloader(config)
         self.template = config.file_template
 
     def download(self, filename):
@@ -38,12 +41,25 @@ class DownloadManager:
         self.downloader.download(filename)
         
     def files_by_name(self, filenames):
+        '''
+        Takes a list of file name strings and iterates 
+        through the download method.
+        '''
         for file in filenames:
             self.download(file)
 
     def files_by_template(self, strings):
+        '''
+        Takes a list of strings, generates a list of file 
+        names with the configuration template and passes it 
+        to the file_by_name methods for download.
+        '''
         filenames = self.filenames_from_template(strings)
         self.files_by_name(filenames)        
         
     def filenames_from_template(self, strings):
+        '''
+        Takes a list of strings and maps the configuration 
+        template onto them to generate a list of file names.
+        '''
         return map(lambda f: self.template % (f), strings)
