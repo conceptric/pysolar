@@ -22,10 +22,12 @@ class Downloader:
 
 class DownloadManager:
     """ 
-    Coordinator class for the files package downloads
+    Builds more complex file download behaviours.
+    downloader: An instance of the Downloader class.
+    config: An instance of the Configuration class.
     """
-    def __init__(self, config):
-        self.downloader = Downloader(config)
+    def __init__(self, downloader, config):
+        self.downloader = downloader
         self.template = config.file_template
 
     def download(self, filename):

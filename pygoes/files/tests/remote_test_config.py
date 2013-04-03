@@ -9,3 +9,11 @@ class MockRemoteConfig:
         self.cache = FIXTURES
         self.file_template = "Gp_xr_%sm.txt"
 
+def get_cached_path(filename):
+    return os.path.join(FIXTURES, filename)
+    
+def cached_file_exists(filename):
+    return os.path.exists(get_cached_path(filename))
+
+def get_cached_mtime(filename):
+    return os.path.getmtime(get_cached_path(filename))

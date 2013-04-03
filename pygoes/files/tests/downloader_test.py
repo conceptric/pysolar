@@ -11,12 +11,6 @@ class TestSingleFileDownload(unittest.TestCase):
     def setUp(self):
         self.config = MockRemoteConfig()
         self.downloader = Downloader(self.config)
-
-    def get_cached_path(self, filename):
-        return os.path.join(self.config.cache, filename)
-        
-    def get_cached_mtime(self, filename):
-        return os.path.getmtime(self.get_cached_path(filename))
         
     def test_downloading_a_single_named_file(self):
         '''
@@ -24,10 +18,9 @@ class TestSingleFileDownload(unittest.TestCase):
         named file if its available in the remote location.
         '''
         filename = "Gp_xr_5m.txt"
-        path = self.get_cached_path(filename)
-        self.assertFalse(os.path.exists(path))
+        self.assertFalse(cached_file_exists(filename))
         self.downloader.download(filename)
-        os.remove(path)
+        os.remove(get_cached_path(filename))
         
     def test_raises_error_with_useful_message(self):
         '''
@@ -49,9 +42,9 @@ class TestSingleFileDownload(unittest.TestCase):
         a named file that has already been cached.
         """    
         filename = "existing_file.txt"
-        time1 = self.get_cached_mtime(filename)
+        time1 = get_cached_mtime(filename)
         self.downloader.download(filename)
-        time2 = self.get_cached_mtime(filename)
+        time2 = get_cached_mtime(filename)
         self.assertEqual(time1, time2)
 
 if __name__ == '__main__':

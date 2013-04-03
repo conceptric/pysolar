@@ -2,6 +2,7 @@ import unittest
 
 from remote_test_config import *
 from pygoes.files.downloader import DownloadManager
+from pygoes.files.downloader import Downloader
 
 class TestDownloadManager(unittest.TestCase):
     """
@@ -11,16 +12,15 @@ class TestDownloadManager(unittest.TestCase):
     def setUp(self):
         self.files = ("Gp_xr_1m.txt", "Gp_xr_5m.txt")
         self.config = MockRemoteConfig()
-        self.dmanager = DownloadManager(self.config)
-        for file in self.files:
-            path = os.path.join(self.config.cache, file)
-            self.assertFalse(os.path.exists(path))
+        self.dmanager = DownloadManager(Downloader(self.config), self.config)
+        for afile in self.files:
+            path = os.path.join(self.config.cache, afile)
+            self.assertFalse(cached_file_exists(afile))
 
     def test_downloading_two_named_files(self):
         self.dmanager.files_by_name(self.files)
-        for file in self.files:
-            path = os.path.join(self.config.cache, file)
-            os.remove(path)        
+        for afile in self.files:
+            os.remove(get_cached_path(afile))        
 
     def test_downloading_a_single_file_with_template(self):        
         self.dmanager.files_by_template('1')
