@@ -6,12 +6,14 @@ from pygoes.utils.errors import MissingFileError
 class RemoteManager:
     """
     Class that represents a remote repository of data files.
+    config: An instance of the Configuration class.
     """
-    def __init__(self, settings):
-        urllib2.urlopen(urllib2.Request(settings.source))
-        self.url = settings.source
+    def __init__(self, config):
+        urllib2.urlopen(urllib2.Request(config.source))
+        self.url = config.source
 
     def read(self, filename):
+        ''' Reads an existing remote file into memory '''        
         with closing(self.__open(filename)) as remote:
             content = remote.read()        
             return content

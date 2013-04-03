@@ -2,6 +2,7 @@ import unittest
 
 from remote_test_config import *
 from pygoes.files.repository import RemoteManager
+from urllib2 import URLError
 
 class FakeSettings:
     def __init__(self, url=REMOTE):
@@ -21,6 +22,10 @@ class TestRemoteManager(unittest.TestCase):
     def test_raises_error_with_local_path_for_url(self):
         with self.assertRaises(ValueError):
             RemoteManager(FakeSettings(FIXTURES))
+
+    def tests_raises_error_when_url_is_not_known(self):
+        with self.assertRaises(URLError):
+            RemoteManager(FakeSettings('http://'))
     
     def test_read_existing_remote_file(self):
         first_line = self.remote.read("Gp_xr_5m.txt").split('\n')[0]        
