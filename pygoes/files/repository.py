@@ -1,7 +1,7 @@
 import urllib2
 from contextlib import closing
 
-from pygoes.utils.errors import MissingFileError
+from pygoes.files.errors import MissingFileError
 
 class RemoteManager:
     """
@@ -9,11 +9,17 @@ class RemoteManager:
     config: An instance of the Configuration class.
     """
     def __init__(self, config):
+        ''' Raises a URLError is the url is unknown. '''
         urllib2.urlopen(urllib2.Request(config.source))
         self.url = config.source
 
     def read(self, filename):
-        ''' Reads an existing remote file into memory '''        
+        ''' 
+        Reads an existing remote file into memory.
+        Raises:
+          MissingFileError if the file cannot be found.
+          URLError is the url is unknown.
+        '''        
         with closing(self.__open(filename)) as remote:
             content = remote.read()        
             return content
