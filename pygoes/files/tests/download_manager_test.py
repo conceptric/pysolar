@@ -3,27 +3,19 @@ from mock import *
 
 from remote_test_config import *
 from pygoes.files.downloader import DownloadManager
-from pygoes.files.downloader import Downloader
+
 
 class TestDownloadManager(unittest.TestCase):
     """
     Tests the construction of an instance of the class.
     """    
-    def setUp(self):
-        self.config = MockRemoteConfig()
-
     def test_raises_exception_without_config(self):
         with self.assertRaises(TypeError):
             DownloadManager()
 
-    def test_downloader_is_optional(self):
-        dm = DownloadManager(self.config)
-        self.assertTrue(dm.downloader)
+    def test_requires_configuration_argument(self):
+        self.assertTrue(DownloadManager(MockRemoteConfig()))
 
-    def test_a_downloader_can_be_injected(self):
-        downloader = Downloader(self.config)
-        dm = DownloadManager(config=self.config, downloader=downloader)
-        self.assertEqual(dm.downloader, downloader)
 
 class TestMultipleFileDownloadQueries(unittest.TestCase):
     """

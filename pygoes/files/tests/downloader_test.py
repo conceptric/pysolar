@@ -3,6 +3,8 @@ from mock import *
 
 from remote_test_config import *
 from pygoes.files.downloader import Downloader
+from pygoes.files.repository import RemoteManager
+from pygoes.files.cache import CacheManager
 
 class TestSingleFileDownload(unittest.TestCase):
     '''
@@ -10,8 +12,10 @@ class TestSingleFileDownload(unittest.TestCase):
     named file from a remote location.
     '''
     def setUp(self):
-        self.config = MockRemoteConfig()
-        self.dl = Downloader(self.config)
+        self.remote = RemoteManager(MockRemoteConfig())
+        self.cache = CacheManager(MockRemoteConfig())
+        self.dl = Downloader(remote=self.remote,
+                             cache=self.cache)
         self.dl.remote.read = MagicMock()
         self.dl.cache.write_file = MagicMock()
 

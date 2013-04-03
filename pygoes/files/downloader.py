@@ -7,9 +7,9 @@ class Downloader:
     Downloads named files from a specified remote location.
     config: An instance of the Configuration class.
     """
-    def __init__(self, config):
-        self.remote = RemoteManager(config)
-        self.cache = CacheManager(config)
+    def __init__(self, remote, cache):
+        self.remote = remote
+        self.cache = cache
 
     def download(self, filename):
         ''' 
@@ -20,6 +20,7 @@ class Downloader:
             content = self.remote.read(filename)
             self.cache.write_file(filename, content)
 
+
 class DownloadManager:
     """ 
     Builds more complex file download behaviours.
@@ -27,10 +28,8 @@ class DownloadManager:
     optional downloader: An instance of the Downloader class.
     """
     def __init__(self, config, downloader=None):
-        if downloader:
-            self.downloader = downloader
-        else:
-            self.downloader = Downloader(config)
+        self.downloader = Downloader(remote=RemoteManager(config),
+                                     cache=CacheManager(config))
         self.template = config.file_template
 
     def download(self, filename):
