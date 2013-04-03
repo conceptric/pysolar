@@ -17,8 +17,8 @@ class Downloader:
         Takes a string for the filename.
         '''
         if not self.cache.file_exists(filename):
-            remote = self.remote.read(filename)
-            self.cache.write_file(filename, remote)
+            content = self.remote.read(filename)
+            self.cache.write_file(filename, content)
 
 class DownloadManager:
     """ 
