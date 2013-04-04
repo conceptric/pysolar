@@ -1,7 +1,7 @@
 import urllib2
 from contextlib import closing
 
-from pygoes.files.errors import MissingFileError
+from pygoes.files.utils import MissingFileError
 
 class RemoteManager:
     """
