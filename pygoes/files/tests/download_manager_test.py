@@ -14,7 +14,7 @@ class TestDownloadManager(unittest.TestCase):
             DownloadManager()
 
     def test_requires_configuration_argument(self):
-        self.assertTrue(DownloadManager(MockRemoteConfig()))
+        self.assertTrue(DownloadManager(get_mock_config()))
 
 
 class TestMultipleFileDownloadQueries(unittest.TestCase):
@@ -23,7 +23,7 @@ class TestMultipleFileDownloadQueries(unittest.TestCase):
     multiple remote files.
     """    
     def setUp(self):
-        self.dmanager = DownloadManager(MockRemoteConfig())
+        self.dmanager = DownloadManager(get_mock_config())
         self.dmanager.downloader.download = MagicMock()
         self.mocked_method = self.dmanager.downloader.download
         
@@ -72,7 +72,7 @@ class TestApplyingFilenameTemplate(unittest.TestCase):
         """    
         strings = ('1', '2')
         expected = ['Gp_xr_1m.txt', 'Gp_xr_2m.txt']
-        dm = DownloadManager(MockRemoteConfig())
+        dm = DownloadManager(get_mock_config())
         actual = dm.filenames_from_template(strings)
         self.assertEquals(expected, actual)
 

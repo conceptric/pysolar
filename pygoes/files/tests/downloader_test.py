@@ -14,7 +14,7 @@ class TestSingleFileDownload(unittest.TestCase):
     def setUp(self):
         self.remote = MagicMock()
         self.remote.read.return_value = "example content"
-        cache = CacheManager(MockRemoteConfig())
+        cache = CacheManager(get_mock_config())
         self.dl = Downloader(remote=self.remote,
                              cache=cache)
 

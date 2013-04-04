@@ -1,14 +1,16 @@
 import os
 
+from pygoes.files.configuration import Configuration
+
 FIXTURES = os.path.join(os.path.dirname(__file__), 'fixtures')
 REMOTE = "http://www.swpc.noaa.gov/ftpdir/lists/xray/"
+TEST_CONFIG = { 'source'       : REMOTE,
+                'cache'        : FIXTURES,
+                'file_template': "Gp_xr_%sm.txt" }
 
-class MockRemoteConfig:
-    def __init__(self):
-        self.source = REMOTE
-        self.cache = FIXTURES
-        self.file_template = "Gp_xr_%sm.txt"
-
+def get_mock_config():
+    return Configuration(TEST_CONFIG)
+    
 def get_cached_path(filename):
     return os.path.join(FIXTURES, filename)
     
