@@ -24,12 +24,13 @@ class TestMultipleFileDownloadQueries(unittest.TestCase):
     """    
     def setUp(self):
         self.dmanager = DownloadManager(MockRemoteConfig())
-        self.dmanager.download = MagicMock()
+        self.dmanager.downloader.download = MagicMock()
+        self.mocked_method = self.dmanager.downloader.download
         
     def test_download_call_is_successfully_mocked(self):
         ''' Sanity check for Mock '''
         self.assertTrue(self.dmanager.downloader)
-        self.assertIsInstance(self.dmanager.download, MagicMock)
+        self.assertIsInstance(self.mocked_method, MagicMock)
 
     def test_downloading_two_named_files(self):
         """
@@ -38,7 +39,7 @@ class TestMultipleFileDownloadQueries(unittest.TestCase):
         files = ("Gp_xr_1m.txt", "Gp_xr_5m.txt")
         expected = [call(files[0]), call(files[1])]
         self.dmanager.files_by_name(files)
-        self.assertEqual(expected, self.dmanager.download.call_args_list)
+        self.assertEqual(expected, self.mocked_method.call_args_list)
 
     def test_downloading_a_single_file_with_template(self):        
         """
@@ -46,7 +47,7 @@ class TestMultipleFileDownloadQueries(unittest.TestCase):
         generated name.
         """    
         self.dmanager.files_by_template('1')
-        self.dmanager.download.assert_called_once_with('Gp_xr_1m.txt')
+        self.mocked_method.assert_called_once_with('Gp_xr_1m.txt')
 
     def test_downloading_two_files_with_template(self):
         """
@@ -56,7 +57,7 @@ class TestMultipleFileDownloadQueries(unittest.TestCase):
         strings = ('1', '2')
         expected = [call('Gp_xr_1m.txt'), call('Gp_xr_2m.txt')]
         self.dmanager.files_by_template(strings)
-        self.assertEqual(expected, self.dmanager.download.call_args_list)
+        self.assertEqual(expected, self.mocked_method.call_args_list)
 
 
 class TestApplyingFilenameTemplate(unittest.TestCase):
