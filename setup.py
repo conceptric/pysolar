@@ -5,7 +5,7 @@ packages = ['pygoes',
             'pygoes.data', 
             'pygoes.files', 
             'pygoes.visualisation']
-required = ['atpy', 'numpy', 'matplotlib']
+required = ['atpy', 'numpy']
 
 setup(
     name='pygoes',
