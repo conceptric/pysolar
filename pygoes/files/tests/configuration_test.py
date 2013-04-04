@@ -42,3 +42,12 @@ class TestConfigurationArguments(unittest.TestCase):
     def test_it_uses_the_passed_in_template(self):            
         config = Configuration({'file_template': '%s_test.txt'})
         self.assertEqual(config.file_template , '%s_test.txt')
+
+    def test_it_uses_a_whole_set_of_passed_in_attributes(self):            
+        attributes = {  'source': REMOTE, 
+                        'cache': FIXTURES, 
+                        'file_template': '%s.txt' }
+        config = Configuration(attributes)
+        self.assertEqual(config.source , REMOTE)
+        self.assertEqual(config.cache , FIXTURES)
+        self.assertEqual(config.file_template , '%s.txt')
