@@ -68,5 +68,22 @@ class TestWriteFile(unittest.TestCase):
             self.cache.write_file("wrong/path.txt", "Error")
 
 
+class TestReadFile(unittest.TestCase):
+    """
+    Test reading the contents of a cached text file
+    """
+    def setUp(self):
+        self.cache = CacheManager(FakeConfig())
+        
+    def test_reading_an_existing_named_file(self):
+        expected = "This is an existing test fixture."
+        actual = self.cache.read("existing_file.txt")
+        self.assertEquals(actual, expected)
+
+    def test_raises_exception_with_missing_file(self):
+        with self.assertRaises(IOError):
+            self.cache.read("missing.txt")
+
+
 if __name__ == '__main__':
     unittest.main()

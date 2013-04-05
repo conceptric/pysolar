@@ -1,4 +1,5 @@
 import os
+from contextlib import closing
 
 class CacheManager:
     """
@@ -30,7 +31,19 @@ class CacheManager:
         data    : string for the contents of the new file.
         '''
         if not self.file_exists(filename):
-            cache = open(os.path.join(self.path, filename), 'w')
-            cache.write(data)
-            cache.close()
+            with closing(self.__open(filename, 'w')) as cached:
+                cached.write(data)
+    
+    def read(self, filename):
+        '''
+        Read the contents of a named file from the local cache.
+        filename: string defining the name of the file.        
+        '''
+        with closing(self.__open(filename)) as cached:
+            return cached.read()        
+        
+    def __open(self, filename, op='r'):
+        return open(os.path.join(self.path, filename), op)
+            
+        
         
