@@ -38,7 +38,7 @@ class TestMultipleFileDownloadQueries(unittest.TestCase):
         """    
         files = ("Gp_xr_1m.txt", "Gp_xr_5m.txt")
         expected = [call(files[0]), call(files[1])]
-        self.dmanager.files_by_name(files)
+        self.dmanager.download_by_name(files)
         self.assertEqual(expected, self.mocked_method.call_args_list)
 
     def test_downloading_a_single_file_with_template(self):        
@@ -46,7 +46,7 @@ class TestMultipleFileDownloadQueries(unittest.TestCase):
         Tests downloads a single file based on a template 
         generated name.
         """    
-        self.dmanager.files_by_template('1')
+        self.dmanager.download_by_template('1')
         self.mocked_method.assert_called_once_with('Gp_xr_1m.txt')
 
     def test_downloading_two_files_with_template(self):
@@ -56,7 +56,7 @@ class TestMultipleFileDownloadQueries(unittest.TestCase):
         """    
         strings = ('1', '2')
         expected = [call('Gp_xr_1m.txt'), call('Gp_xr_2m.txt')]
-        self.dmanager.files_by_template(strings)
+        self.dmanager.download_by_template(strings)
         self.assertEqual(expected, self.mocked_method.call_args_list)
 
 

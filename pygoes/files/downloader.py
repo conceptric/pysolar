@@ -39,7 +39,7 @@ class DownloadManager:
         '''
         self.downloader.download(filename)
         
-    def files_by_name(self, filenames):
+    def download_by_name(self, filenames):
         '''
         Takes a list of file name strings and iterates 
         through the download method.
@@ -47,14 +47,14 @@ class DownloadManager:
         for file in filenames:
             self.download(file)
 
-    def files_by_template(self, strings):
+    def download_by_template(self, strings):
         '''
         Takes a list of strings, generates a list of file 
         names with the configuration template and passes it 
         to the file_by_name methods for download.
         '''
         filenames = self.filenames_from_template(strings)
-        self.files_by_name(filenames)        
+        self.download_by_name(filenames)        
         
     def filenames_from_template(self, strings):
         '''
