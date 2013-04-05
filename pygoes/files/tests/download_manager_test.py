@@ -2,19 +2,19 @@ import unittest
 from mock import *
 
 from remote_test_config import *
-from pygoes.files.downloader import DownloadManager
+from pygoes.files.downloader import FileManager
 
 
-class TestDownloadManager(unittest.TestCase):
+class TestFileManager(unittest.TestCase):
     """
     Tests the construction of an instance of the class.
     """    
     def test_raises_exception_without_config(self):
         with self.assertRaises(TypeError):
-            DownloadManager()
+            FileManager()
 
     def test_requires_configuration_argument(self):
-        self.assertTrue(DownloadManager(get_mock_config()))
+        self.assertTrue(FileManager(get_mock_config()))
 
 
 class TestMultipleFileDownloadQueries(unittest.TestCase):
@@ -23,13 +23,13 @@ class TestMultipleFileDownloadQueries(unittest.TestCase):
     multiple remote files.
     """    
     def setUp(self):
-        self.dmanager = DownloadManager(get_mock_config())
-        self.dmanager.downloader.download = MagicMock()
-        self.mocked_method = self.dmanager.downloader.download
+        self.fmanager = FileManager(get_mock_config())
+        self.fmanager.downloader.download = MagicMock()
+        self.mocked_method = self.fmanager.downloader.download
         
     def test_download_call_is_successfully_mocked(self):
         ''' Sanity check for Mock '''
-        self.assertTrue(self.dmanager.downloader)
+        self.assertTrue(self.fmanager.downloader)
         self.assertIsInstance(self.mocked_method, MagicMock)
 
     def test_downloading_two_named_files(self):
@@ -38,7 +38,7 @@ class TestMultipleFileDownloadQueries(unittest.TestCase):
         """    
         files = ("Gp_xr_1m.txt", "Gp_xr_5m.txt")
         expected = [call(files[0]), call(files[1])]
-        self.dmanager.download_by_name(files)
+        self.fmanager.download_by_name(files)
         self.assertEqual(expected, self.mocked_method.call_args_list)
 
     def test_downloading_a_single_file_with_template(self):        
@@ -46,7 +46,7 @@ class TestMultipleFileDownloadQueries(unittest.TestCase):
         Tests downloads a single file based on a template 
         generated name.
         """    
-        self.dmanager.download_by_template('1')
+        self.fmanager.download_by_template('1')
         self.mocked_method.assert_called_once_with('Gp_xr_1m.txt')
 
     def test_downloading_two_files_with_template(self):
@@ -56,7 +56,7 @@ class TestMultipleFileDownloadQueries(unittest.TestCase):
         """    
         strings = ('1', '2')
         expected = [call('Gp_xr_1m.txt'), call('Gp_xr_2m.txt')]
-        self.dmanager.download_by_template(strings)
+        self.fmanager.download_by_template(strings)
         self.assertEqual(expected, self.mocked_method.call_args_list)
 
 
@@ -72,8 +72,8 @@ class TestApplyingFilenameTemplate(unittest.TestCase):
         """    
         strings = ('1', '2')
         expected = ['Gp_xr_1m.txt', 'Gp_xr_2m.txt']
-        dm = DownloadManager(get_mock_config())
-        actual = dm.filenames_from_template(strings)
+        fmanager = FileManager(get_mock_config())
+        actual = fmanager.filenames_from_template(strings)
         self.assertEquals(expected, actual)
 
         

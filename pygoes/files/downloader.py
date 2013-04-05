@@ -21,7 +21,7 @@ class Downloader:
             self.cache.write_file(filename, content)
 
 
-class DownloadManager:
+class FileManager:
     """ 
     Builds more complex file download behaviours.
     config: An instance of the Configuration class.
