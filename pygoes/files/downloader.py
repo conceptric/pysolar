@@ -25,9 +25,8 @@ class FileManager:
     """ 
     Builds more complex file download behaviours.
     config: An instance of the Configuration class.
-    optional downloader: An instance of the Downloader class.
     """
-    def __init__(self, config, downloader=None):
+    def __init__(self, config):
         self.downloader = Downloader(remote=RemoteManager(config),
                                      cache=CacheManager(config))
         self.template = config.file_template
