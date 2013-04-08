@@ -1,4 +1,5 @@
 import unittest
+from mock import *
 
 from remote_test_config import *
 from pygoes.files.cache import CacheManager
@@ -83,6 +84,48 @@ class TestReadFile(unittest.TestCase):
     def test_raises_exception_with_missing_file(self):
         with self.assertRaises(IOError):
             self.cache.read("missing.txt")
+
+class TestSingleFileDownload(unittest.TestCase):
+    '''
+    Test the ability to manage the download of a named file 
+    from a remote location to the local cache.
+    '''
+    def setUp(self):
+        self.remote = MagicMock()
+        self.remote.read.return_value = "example content"
+        self.cache = CacheManager(get_mock_config())
+
+    def test_calls_are_successfully_mocked(self):
+        ''' Sanity check for Mock '''
+        self.assertIsInstance(self.remote, MagicMock)
+        
+    def test_downloading_a_single_named_file(self):
+        '''
+        Successfully downloads a named file.
+        '''
+        filename = "new_file.txt"
+        self.cache.download(filename, self.remote)
+        self.remote.read.assert_called_once_with(filename)
+        os.remove(get_cached_path(filename))
+
+    def test_no_attempt_to_read_if_file_cached(self):
+        """
+        Does not read the remote source if the named file 
+        has already been cached.
+        """    
+        self.cache.download("existing_file.txt", self.remote)
+        self.assertEqual(len(self.remote.read.call_args_list), 0)
+        
+    def test_no_attempt_to_write_if_file_cached(self):
+        """
+        Does not write to the local file if  
+        the named file that has already been cached.
+        """    
+        filename = "existing_file.txt"
+        time_before = get_cached_mtime(filename)
+        self.cache.download(filename, self.remote)
+        time_after = get_cached_mtime(filename)
+        self.assertEqual(time_before, time_after)
 
 
 if __name__ == '__main__':

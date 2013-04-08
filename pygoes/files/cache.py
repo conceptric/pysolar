@@ -41,6 +41,16 @@ class CacheManager:
         '''
         with closing(self.__open(filename)) as cached:
             return cached.read()        
+
+    def download(self, filename, remote):
+        ''' 
+        Downloads a single named file from a remote location. 
+        filename: a string for the filename.
+        remote  : a remote repository object.
+        '''
+        if not self.file_exists(filename):
+            content = remote.read(filename)
+            self.write_file(filename, content)
         
     def __open(self, filename, op='r'):
         return open(os.path.join(self.path, filename), op)
