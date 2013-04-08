@@ -2,7 +2,7 @@ import unittest
 from mock import *
 
 from remote_test_config import *
-from pygoes.files.downloader import FileManager
+from pygoes.files.repository import FileManager
 
 
 class TestFileManager(unittest.TestCase):
