@@ -24,12 +24,12 @@ class TestMultipleFileDownloadQueries(unittest.TestCase):
     """    
     def setUp(self):
         self.fmanager = FileManager(get_mock_config())
-        self.fmanager.downloader.download = MagicMock()
-        self.mocked_method = self.fmanager.downloader.download
+        self.fmanager.cache.download = MagicMock()
+        self.mocked_method = self.fmanager.cache.download
         
     def test_download_call_is_successfully_mocked(self):
         ''' Sanity check for Mock '''
-        self.assertTrue(self.fmanager.downloader)
+        self.assertTrue(self.fmanager.cache)
         self.assertIsInstance(self.mocked_method, MagicMock)
 
     def test_downloading_two_named_files(self):
@@ -37,7 +37,8 @@ class TestMultipleFileDownloadQueries(unittest.TestCase):
         Tests downloads multiple files based on file names strings.
         """    
         files = ("Gp_xr_1m.txt", "Gp_xr_5m.txt")
-        expected = [call(files[0]), call(files[1])]
+        expected = [call(files[0], self.fmanager.remote), 
+            call(files[1], self.fmanager.remote)]
         self.fmanager.download_by_name(files)
         self.assertEqual(expected, self.mocked_method.call_args_list)
 
@@ -47,7 +48,8 @@ class TestMultipleFileDownloadQueries(unittest.TestCase):
         generated name.
         """    
         self.fmanager.download_by_template('1')
-        self.mocked_method.assert_called_once_with('Gp_xr_1m.txt')
+        self.mocked_method.assert_called_once_with('Gp_xr_1m.txt', 
+            self.fmanager.remote)
 
     def test_downloading_two_files_with_template(self):
         """
@@ -55,7 +57,8 @@ class TestMultipleFileDownloadQueries(unittest.TestCase):
         generated names.
         """    
         strings = ('1', '2')
-        expected = [call('Gp_xr_1m.txt'), call('Gp_xr_2m.txt')]
+        expected = [call('Gp_xr_1m.txt', self.fmanager.remote), 
+            call('Gp_xr_2m.txt', self.fmanager.remote)]
         self.fmanager.download_by_template(strings)
         self.assertEqual(expected, self.mocked_method.call_args_list)
 

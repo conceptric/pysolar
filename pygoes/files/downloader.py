@@ -1,25 +1,5 @@
 import urllib2
-from repository import RemoteManager
-from cache import CacheManager
-
-class Downloader:
-    """
-    Downloads named files from a specified remote location.
-    config: An instance of the Configuration class.
-    """
-    def __init__(self, remote, cache):
-        self.remote = remote
-        self.cache = cache
-
-    def download(self, filename):
-        ''' 
-        Downloads a single named file from a remote location. 
-        Takes a string for the filename.
-        '''
-        if not self.cache.file_exists(filename):
-            content = self.remote.read(filename)
-            self.cache.write_file(filename, content)
-
+from repository import *
 
 class FileManager:
     """ 
@@ -27,8 +7,8 @@ class FileManager:
     config: An instance of the Configuration class.
     """
     def __init__(self, config):
-        self.downloader = Downloader(remote=RemoteManager(config),
-                                     cache=CacheManager(config))
+        self.remote = RemoteManager(config)
+        self.cache = CacheManager(config)
         self.template = config.file_template
 
     def download(self, filename):
@@ -36,7 +16,7 @@ class FileManager:
         Delegates this method to be Downloader class. Takes 
         a filename string.
         '''
-        self.downloader.download(filename)
+        self.cache.download(filename, self.remote)
         
     def download_by_name(self, filenames):
         '''
