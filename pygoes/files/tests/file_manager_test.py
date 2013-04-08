@@ -39,7 +39,7 @@ class TestMultipleFileDownloadQueries(unittest.TestCase):
         files = ("Gp_xr_1m.txt", "Gp_xr_5m.txt")
         expected = [call(files[0], self.fmanager.remote), 
             call(files[1], self.fmanager.remote)]
-        self.fmanager.download_by_name(files)
+        self.fmanager.download(files)
         self.assertEqual(expected, self.mocked_method.call_args_list)
 
     def test_downloading_a_single_file_with_template(self):        
