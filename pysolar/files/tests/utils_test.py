@@ -1,6 +1,6 @@
 import unittest
 
-from pygoes.files.utils import *
+from pysolar.files.utils import *
 
 class TestGetDateRange(unittest.TestCase):
     """

@@ -3,7 +3,7 @@ from atpy.basetable import Table
 from asciitable import InconsistentTableError
 
 from data_test_config import *
-from pygoes.data import GoesFile
+from pysolar.data import GoesFile
 
 XRAY =  '20130227_Gp_xr_5m.txt'
 MAG =   '20130322_Gp_mag_1m.txt'

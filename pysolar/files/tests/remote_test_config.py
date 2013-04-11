@@ -1,6 +1,6 @@
 import os
 
-from pygoes.files.configuration import Configuration
+from pysolar.files.configuration import Configuration
 
 FIXTURES = os.path.join(os.path.dirname(__file__), 'fixtures')
 REMOTE = "http://www.swpc.noaa.gov/ftpdir/lists/xray/"

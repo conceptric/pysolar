@@ -2,7 +2,7 @@ import unittest
 from mock import *
 
 from remote_test_config import *
-from pygoes.files.repository import CacheManager
+from pysolar.files.repository import CacheManager
 
 class FakeConfig:
     def __init__(self, path=FIXTURES):

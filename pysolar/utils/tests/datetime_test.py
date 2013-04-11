@@ -1,5 +1,5 @@
 import unittest
-from pygoes.utils.datetime import DateCompiler
+from pysolar.utils.datetime import DateCompiler
 
 class TestDateCompilerDatetimes(unittest.TestCase):
     """ 

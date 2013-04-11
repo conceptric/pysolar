@@ -1,7 +1,7 @@
 import unittest
 import os
 
-from pygoes.files.configuration import Configuration
+from pysolar.files.configuration import Configuration
 from remote_test_config import *
 
 class TestConfigurationDefaults(unittest.TestCase):

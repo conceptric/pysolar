@@ -1,5 +1,5 @@
 '''
-The configuration module for the PyGoes Library.
+The configuration module for the PySolar Library.
 '''
 
 class FileDownloadSettings:

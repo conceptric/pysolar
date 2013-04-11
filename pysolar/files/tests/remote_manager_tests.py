@@ -1,7 +1,7 @@
 import unittest
 
 from remote_test_config import *
-from pygoes.files.repository import RemoteManager
+from pysolar.files.repository import RemoteManager
 from urllib2 import URLError
 
 class FakeConfig:

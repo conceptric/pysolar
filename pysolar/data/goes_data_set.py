@@ -1,5 +1,5 @@
 import os
-from pygoes.data.goes_file import GoesFile
+from pysolar.data.goes_file import GoesFile
 
 class GoesDataSet:
     '''

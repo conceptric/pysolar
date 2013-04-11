@@ -2,7 +2,7 @@ import os
 import urllib2
 from contextlib import closing
 
-from pygoes.files.utils import MissingFileError
+from pysolar.files.utils import MissingFileError
 
 class FileManager:
     """ 

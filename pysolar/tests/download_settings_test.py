@@ -1,6 +1,6 @@
 import unittest
 
-from pygoes.configuration import FileDownloadSettings
+from pysolar.configuration import FileDownloadSettings
 
 class TestFileDownloadSettings(unittest.TestCase):
     """

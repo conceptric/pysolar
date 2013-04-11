@@ -1,5 +1,5 @@
 import atpy
-from pygoes.utils.datetime import DateCompiler
+from pysolar.utils.datetime import DateCompiler
 from numpy import datetime64
 
 XRAY_FIELDS =  {'col1': 'year',

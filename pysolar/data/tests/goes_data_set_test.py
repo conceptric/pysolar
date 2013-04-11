@@ -2,7 +2,7 @@ import unittest
 from atpy.basetable import Table
 
 from data_test_config import *
-from pygoes.data import GoesDataSet
+from pysolar.data import GoesDataSet
 
 FILENAMES =  ['20130227_Gp_xr_5m.txt', '20130228_Gp_xr_5m.txt']
 
