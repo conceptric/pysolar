@@ -2,25 +2,6 @@ import atpy
 from pysolar.utils.datetime import DateCompiler
 from numpy import datetime64
 
-# XRAY_FIELDS =  {'col1': 'year',
-#                 'col2': 'month',
-#                 'col3': 'day', 
-#                 'col4': 'time',
-#                 'col5': 'JD days',
-#                 'col6': 'JD secs',
-#                 'col7': '0.05-0.4 nanometer (W/m2)',
-#                 'col8': '0.1-0.8 nanometer (W/m2)'}
-# 
-# MAG_FIELDS =   {'col1': 'year',
-#                 'col2': 'month',
-#                 'col3': 'day', 
-#                 'col4': 'time',
-#                 'col5': 'JD days',
-#                 'col6': 'JD secs',
-#                 'col7': 'Hp (nT)',
-#                 'col8': 'He (nT)',
-#                 'col9': 'Hn (nT)',
-#                 'col10': 'Total Field (nT)'}
 
 class GoesFile(object):
     ''' 
@@ -34,7 +15,8 @@ class GoesFile(object):
     These datetime strings can be used directly to instantiate
     NumPy datetime64 objects.
     
-    Path: path to the data file.
+    path    : path to the data file.
+    fields  : Optional dictionary of file field names.
     The table attribute contains the ATPy table instance.       
 
     '''
