@@ -2,27 +2,27 @@ import atpy
 from pysolar.utils.datetime import DateCompiler
 from numpy import datetime64
 
-XRAY_FIELDS =  {'col1': 'year',
-                'col2': 'month',
-                'col3': 'day', 
-                'col4': 'time',
-                'col5': 'JD days',
-                'col6': 'JD secs',
-                'col7': '0.05-0.4 nanometer (W/m2)',
-                'col8': '0.1-0.8 nanometer (W/m2)'}
+# XRAY_FIELDS =  {'col1': 'year',
+#                 'col2': 'month',
+#                 'col3': 'day', 
+#                 'col4': 'time',
+#                 'col5': 'JD days',
+#                 'col6': 'JD secs',
+#                 'col7': '0.05-0.4 nanometer (W/m2)',
+#                 'col8': '0.1-0.8 nanometer (W/m2)'}
+# 
+# MAG_FIELDS =   {'col1': 'year',
+#                 'col2': 'month',
+#                 'col3': 'day', 
+#                 'col4': 'time',
+#                 'col5': 'JD days',
+#                 'col6': 'JD secs',
+#                 'col7': 'Hp (nT)',
+#                 'col8': 'He (nT)',
+#                 'col9': 'Hn (nT)',
+#                 'col10': 'Total Field (nT)'}
 
-MAG_FIELDS =   {'col1': 'year',
-                'col2': 'month',
-                'col3': 'day', 
-                'col4': 'time',
-                'col5': 'JD days',
-                'col6': 'JD secs',
-                'col7': 'Hp (nT)',
-                'col8': 'He (nT)',
-                'col9': 'Hn (nT)',
-                'col10': 'Total Field (nT)'}
-
-class GoesFile:
+class GoesFile(object):
     ''' 
     Class to represent a GOES data file using ATPy tables.
     
@@ -38,12 +38,13 @@ class GoesFile:
     The table attribute contains the ATPy table instance.       
 
     '''
-    def __init__(self, path, filetype='xray'):         
-        if filetype == 'magnetic':
-            self.column_map = MAG_FIELDS
-        else:
-            self.column_map = XRAY_FIELDS        
-        
+    def __init__(self, path, fields={'col1': 'year',
+                                    'col2': 'month',
+                                    'col3': 'day', 
+                                    'col4': 'time',
+                                    'col5': 'JD days',
+                                    'col6': 'JD secs'}):   
+        self.column_map = fields              
         self.table = self.__read(path)
         self.__rename_columns()
         self.__insert_new_columns()
@@ -108,4 +109,60 @@ class GoesFile:
         return query
         
 
+class XrayGoesFile(GoesFile):
+    ''' 
+    Class to represent an X-Ray GOES data file using ATPy tables.
+    
+    On creation it reads the file data from the path, 
+    sets meaningful names for existing table columns, 
+    and inserts a new column populated with datetime strings
+    generated from the components first 4 columns of the original file.
+    
+    These datetime strings can be used directly to instantiate
+    NumPy datetime64 objects.
+    
+    Path: path to the data file.
+    The table attribute contains the ATPy table instance.       
+
+    '''
+    def __init__(self, path):
+        FIELDS =  { 'col1': 'year',
+                    'col2': 'month',
+                    'col3': 'day', 
+                    'col4': 'time',
+                    'col5': 'JD days',
+                    'col6': 'JD secs',
+                    'col7': '0.05-0.4 nanometer (W/m2)',
+                    'col8': '0.1-0.8 nanometer (W/m2)' }
+        super(XrayGoesFile, self).__init__(path, FIELDS)
+        
+    
+class MagneticGoesFile(GoesFile):
+    ''' 
+    Class to represent an Magnetometry GOES data file using ATPy tables.
+    
+    On creation it reads the file data from the path, 
+    sets meaningful names for existing table columns, 
+    and inserts a new column populated with datetime strings
+    generated from the components first 4 columns of the original file.
+    
+    These datetime strings can be used directly to instantiate
+    NumPy datetime64 objects.
+    
+    Path: path to the data file.
+    The table attribute contains the ATPy table instance.       
+
+    '''    
+    def __init__(self, path):
+        FIELDS =   {'col1': 'year',
+                    'col2': 'month',
+                    'col3': 'day', 
+                    'col4': 'time',
+                    'col5': 'JD days',
+                    'col6': 'JD secs',
+                    'col7': 'Hp (nT)',
+                    'col8': 'He (nT)',
+                    'col9': 'Hn (nT)',
+                    'col10': 'Total Field (nT)'}
+        super(MagneticGoesFile, self).__init__(path, FIELDS)
 

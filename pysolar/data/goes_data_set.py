@@ -1,5 +1,5 @@
 import os
-from pysolar.data.goes_file import GoesFile
+from pysolar.data.goes_file import *
 
 class GoesDataSet:
     '''
@@ -22,8 +22,10 @@ class GoesDataSet:
         '''
         for file in files:
             try:
-                datafile = GoesFile(os.path.join(root_path, file), 
-                    self.filetype)
+                if self.filetype == 'magnetic':
+                    datafile = MagneticGoesFile(os.path.join(root_path, file))                    
+                else:
+                    datafile = XrayGoesFile(os.path.join(root_path, file))                    
                 self.datafiles.append(datafile)
             except IOError:
                 pass
