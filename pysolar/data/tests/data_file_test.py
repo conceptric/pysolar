@@ -1,5 +1,6 @@
 import unittest
 import os
+from numpy import datetime64
 from asciitable import InconsistentTableError
 
 from data_test_config import *
@@ -50,7 +51,27 @@ class TestValidDataFile(unittest.TestCase):
         ' Test that the names can be retrieved from the table '
         expected = ('Date_Time', 'Noise', 'ICV')
         self.assertEqual(expected, self.datafile.names())
-    
+
+
+class TestDateTimeMethods(unittest.TestCase):
+    " Test methods for manipulating date time data. "
+    def setUp(self):
+        test_file = os.path.join(FIXTURES, 'example_vlf_data.txt')
+        self.datafile = DataFile(test_file)
+
+    def test_all_dates_are_numpy_format(self):
+        dates = self.datafile.all_dates()
+        for d in dates:
+            self.assertIsInstance(d, datetime64)
+
+    def test_begins(self):
+        expected = datetime64('2013-03-23 19:12:43')
+        self.assertEqual(expected, self.datafile.begins())
+
+    def test_finishes(self):
+        expected = datetime64('2013-03-23 19:13:28')
+        self.assertEqual(expected, self.datafile.finishes())
+
 
 if __name__ == '__main__':
     unittest.main()

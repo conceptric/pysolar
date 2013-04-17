@@ -30,6 +30,14 @@ class TestGoesFile(unittest.TestCase):
          for item in expected:
              self.assertTrue(item in actual, "'%s' is missing" % (item))
 
+    def test_datetime_of_the_first_record(self):
+        actual = self.goes.begins()
+        self.assertEqual("2013-02-27T00:00Z", actual.astype(str))
+
+    def test_datetime_of_the_last_record(self):
+        actual = self.goes.finishes()
+        self.assertEqual("2013-02-27T23:55Z", actual.astype(str))
+
 
 class TestGoesFileGetDateRange(unittest.TestCase):
     """ 
@@ -43,7 +51,7 @@ class TestGoesFileGetDateRange(unittest.TestCase):
         start   = "2013-02-27 00:30"
         end     = "2013-02-27 01:00"
         actual = self.goes.get_date_range(start, end)
-        self.assertEqual(actual.Date_Time[0], start)
+        self.assertEqual(actual['Date_Time'][0], start)
         self.assertEqual(len(actual), 7)
         self.assertEqual(actual.Date_Time[6], end)
 
@@ -92,13 +100,6 @@ class TestAnXrayGoesFile(unittest.TestCase):
         for item in expected:
             self.assertTrue(item in actual, "'%s' is missing" % (item))
 
-    def test_datetime_of_the_first_record(self):
-        actual = self.goes.table.Date_Time[0]
-        self.assertEqual("2013-02-27 00:00", actual)
-        
-    def test_datetime_of_the_last_record(self):
-        actual = self.goes.table.Date_Time[self.glength - 1]
-        self.assertEqual("2013-02-27 23:55", actual)
 
 class TestAMagneticGoesFile(unittest.TestCase):
     """ 
@@ -117,14 +118,6 @@ class TestAMagneticGoesFile(unittest.TestCase):
         actual = self.goes.names()
         for item in expected:
             self.assertTrue(item in actual, "'%s' is missing" % (item))
-
-    def test_datetime_of_the_first_record(self):
-        actual = self.goes.table.Date_Time[0]
-        self.assertEqual("2013-03-22 00:00", actual)
-        
-    def test_datetime_of_the_last_record(self):
-        actual = self.goes.table.Date_Time[self.glength - 1]
-        self.assertEqual("2013-03-22 23:59", actual)
 
 
 if __name__ == '__main__':
