@@ -34,9 +34,9 @@ class TestGoesFileGetDateRange(unittest.TestCase):
         start   = "2013-02-27 00:30"
         end     = "2013-02-27 01:00"
         actual = self.goes.get_date_range(start, end)
-        self.assertEqual(actual.datetime[0], start)
+        self.assertEqual(actual.Date_Time[0], start)
         self.assertEqual(len(actual), 7)
-        self.assertEqual(actual.datetime[6], end)
+        self.assertEqual(actual.Date_Time[6], end)
 
     def test_invalid_datetime_format(self):
         start   = "invalid"
@@ -57,11 +57,11 @@ class TestGoesFileGetDateRange(unittest.TestCase):
             self.goes.get_date_range(start, end)        
 
     def test_first_modified_jd(self):
-        actual = self.goes.table['Modified JD'][0]
+        actual = self.goes.table.ModifiedJD[0]
         self.assertEqual(56350.00000, actual)
         
     def test_last_modified_jd(self):
-        actual = self.goes.table['Modified JD'][287]
+        actual = self.goes.table.ModifiedJD[287]
         self.assertEqual(56350.99653, actual)
 
 
@@ -87,16 +87,16 @@ class TestAnXrayGoesFile(unittest.TestCase):
                     'JD days', 'JD secs',
                     '0.05-0.4 nanometer (W/m2)',
                     '0.1-0.8 nanometer (W/m2)',
-                    'datetime', 'Modified JD')
+                    'Date_Time', 'ModifiedJD')
         actual = self.goes.table.names
         self.assertEqual(expected, actual)
 
     def test_datetime_of_the_first_record(self):
-        actual = self.goes.table.datetime[0]
+        actual = self.goes.table.Date_Time[0]
         self.assertEqual("2013-02-27 00:00", actual)
         
     def test_datetime_of_the_last_record(self):
-        actual = self.goes.table.datetime[self.glength - 1]
+        actual = self.goes.table.Date_Time[self.glength - 1]
         self.assertEqual("2013-02-27 23:55", actual)
 
 class TestAMagneticGoesFile(unittest.TestCase):
@@ -122,16 +122,16 @@ class TestAMagneticGoesFile(unittest.TestCase):
                     'JD days', 'JD secs',
                     'Hp (nT)', 'He (nT)', 'Hn (nT)',
                     'Total Field (nT)',
-                    'datetime', 'Modified JD')
+                    'Date_Time', 'ModifiedJD')
         actual = self.goes.table.names
         self.assertEqual(expected, actual)
 
     def test_datetime_of_the_first_record(self):
-        actual = self.goes.table.datetime[0]
+        actual = self.goes.table.Date_Time[0]
         self.assertEqual("2013-03-22 00:00", actual)
         
     def test_datetime_of_the_last_record(self):
-        actual = self.goes.table.datetime[self.glength - 1]
+        actual = self.goes.table.Date_Time[self.glength - 1]
         self.assertEqual("2013-03-22 23:59", actual)
 
 

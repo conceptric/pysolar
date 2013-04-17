@@ -42,9 +42,9 @@ class GoesFile(DataFile):
 
     def __insert_new_columns(self):
         " Inserts columns for JD date and datetime"
-        self.table.add_column('datetime', self.__fill_datetimes(), 
+        self.table.add_column('Date_Time', self.__fill_datetimes(), 
             dtype='str')
-        self.table.add_column('Modified JD', self.__fill_JD(), 
+        self.table.add_column('ModifiedJD', self.__fill_JD(), 
             dtype='float')
 
     def __fill_datetimes(self):
@@ -53,7 +53,7 @@ class GoesFile(DataFile):
         return self.__fill_column(f)
         
     def __fill_JD(self):
-        " Fills the Modified JD column "
+        " Fills the ModifiedJD column "
         f = lambda x: DateCompiler().modified_julian_date(x)
         return self.__fill_column(f)
         
@@ -81,7 +81,7 @@ class GoesFile(DataFile):
         if end_time < start_time: 
             raise ValueError('The end time cannot be before you start')
         
-        datetimes = self.table.datetime.astype(datetime64)
+        datetimes = self.table.Date_Time.astype(datetime64)
         
         query = self.table.where(
          (datetimes >= start_time) & (datetimes <= end_time))

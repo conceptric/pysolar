@@ -49,7 +49,7 @@ class GoesDataSet:
         table = tables[0]
         for i in range(1, len(tables), 1):
             table.append(tables[i])
-        table.sort('Modified JD')
+        table.sort('ModifiedJD')
         return table
         
                 

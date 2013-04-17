@@ -94,15 +94,15 @@ class TestDataSetGetDateRanges(unittest.TestCase):
     
     def test_files_in_date_order(self):
         actual = self.dataset.get_date_range(self.start, self.end)
-        self.assertEqual(actual.datetime[0], self.start)
-        self.assertEqual(actual.datetime[self.records - 1], self.end)
+        self.assertEqual(actual.Date_Time[0], self.start)
+        self.assertEqual(actual.Date_Time[self.records - 1], self.end)
 
     def test_files_not_in_date_order(self):
         reversed_dataset = GoesDataSet()
         reversed_dataset.compile(FIXTURES, reversed(FILENAMES))
         actual = reversed_dataset.get_date_range(self.start, self.end)
-        self.assertEqual(actual.datetime[0], self.start)
-        self.assertEqual(actual.datetime[self.records - 1], self.end)
+        self.assertEqual(actual.Date_Time[0], self.start)
+        self.assertEqual(actual.Date_Time[self.records - 1], self.end)
 
 
 
