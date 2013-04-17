@@ -1,6 +1,4 @@
 import unittest
-from atpy.basetable import Table
-from asciitable import InconsistentTableError
 
 from data_test_config import *
 from pysolar.data import *
@@ -10,41 +8,8 @@ MAG =   '20130322_Gp_mag_1m.txt'
 
 class TestGoesFile(unittest.TestCase):
     """ 
-    Test the GoesFile class instantiates and handles errors
+    Test the GoesFile class instance
     """
-    def test_requires_path(self):
-        with self.assertRaises(TypeError):
-            GoesFile()
-
-    def test_incorrect_path_filename(self):
-        with self.assertRaises(IOError):
-            GoesFile(os.path.join(FIXTURES, 'wrong_filename.txt'))
-
-    def test_blank_path_filename(self):
-        with self.assertRaises(IOError):
-            GoesFile(os.path.join(FIXTURES, ''))
-
-    def test_invalid_path_type(self):
-        with self.assertRaises(IOError):
-            GoesFile('/invalid')
-
-    def test_incomplete_path(self):
-        with self.assertRaises(IOError):
-            GoesFile(FIXTURES)
-
-    def test_with_xray_file(self):
-        test_file = os.path.join(FIXTURES, XRAY)
-        self.assert_(XrayGoesFile(test_file))
-
-    def test_with_magnet_file(self):
-        test_file = os.path.join(FIXTURES, MAG)
-        self.assert_(MagneticGoesFile(test_file))
-
-    def test_empty_file(self):
-        test_file = os.path.join(FIXTURES, 'empty_file.txt')
-        with self.assertRaises(InconsistentTableError):
-            GoesFile(test_file)
-
     def test_defaults_to_a_date_column_map(self):
         goes_file = GoesFile(os.path.join(FIXTURES, XRAY))
         column_map = goes_file.get_column_map()
@@ -69,7 +34,6 @@ class TestGoesFileGetDateRange(unittest.TestCase):
         start   = "2013-02-27 00:30"
         end     = "2013-02-27 01:00"
         actual = self.goes.get_date_range(start, end)
-        self.assertIsInstance(actual, Table)
         self.assertEqual(actual.datetime[0], start)
         self.assertEqual(len(actual), 7)
         self.assertEqual(actual.datetime[6], end)
@@ -110,7 +74,7 @@ class TestAnXrayGoesFile(unittest.TestCase):
         self.glength = 288
 
     def test_file_length(self):
-        self.assertEqual(self.glength, len(self.goes.table))
+        self.assertEqual(self.glength, self.goes.size())
         
     def test_original_column_names(self):
         expected = ['col1', 'col2', 'col3', 'col4', 
@@ -144,7 +108,7 @@ class TestAMagneticGoesFile(unittest.TestCase):
         self.glength = 1440
 
     def test_file_length(self):
-        self.assertEqual(self.glength, len(self.goes.table))
+        self.assertEqual(self.glength, self.goes.size())
         
     def test_original_column_names(self):
         expected = ['col1', 'col10', 'col2', 'col3', 'col4', 

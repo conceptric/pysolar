@@ -1,7 +1,9 @@
 import atpy
 import numpy as np
 
-class VlfDataFile(object):
+from pysolar.data import DataFile
+
+class VlfDataFile(DataFile):
     """
     Class to represent a VLF comma-delimited data file using 
     ATPy tables.
@@ -13,12 +15,8 @@ class VlfDataFile(object):
     The table attribute contains the ATPy table instance.
     """
     def __init__(self, path):
-        self.table = atpy.Table(path, type="ascii", delimiter=",")
+        super(VlfDataFile, self).__init__(path)
         
-    def size(self):
-        ' Returns an integer for the number of records '
-        return len(self.table)
-
     def all_dates(self):
         ' Returns a numpy array containing all the datetimes '
         return self.table['Date_Time'].astype(np.datetime64)
