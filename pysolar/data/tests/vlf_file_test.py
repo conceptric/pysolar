@@ -2,14 +2,14 @@ import unittest
 from numpy import datetime64
 
 from data_test_config import *
-from pysolar.data import VlfDataFile
+from pysolar.data import VlfFile
 
 
 class TestDateTimeMethods(unittest.TestCase):
     " Test methods for manipulating date time data. "
     def setUp(self):
         test_file = os.path.join(FIXTURES, 'example_vlf_data.txt')
-        self.vlf = VlfDataFile(test_file)
+        self.vlf = VlfFile(test_file)
 
     def test_all_dates_are_numpy_format(self):
         dates = self.vlf.all_dates()
@@ -29,7 +29,7 @@ class TestRecordSelectionMethods(unittest.TestCase):
     """ Test methods for selecting data records """
     def setUp(self):
         test_file = os.path.join(FIXTURES, 'example_vlf_data.txt')
-        self.vlf = VlfDataFile(test_file)
+        self.vlf = VlfFile(test_file)
     
     def test_select_a_single_record_by_datetime(self):
         expected = '2013-03-23 19:12:43'

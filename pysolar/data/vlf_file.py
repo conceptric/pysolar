@@ -3,7 +3,7 @@ import numpy as np
 
 from pysolar.data import DataFile
 
-class VlfDataFile(DataFile):
+class VlfFile(DataFile):
     """
     Class to represent a VLF comma-delimited data file using 
     ATPy tables.
@@ -15,7 +15,7 @@ class VlfDataFile(DataFile):
     The table attribute contains the ATPy table instance.
     """
     def __init__(self, path):
-        super(VlfDataFile, self).__init__(path)
+        super(VlfFile, self).__init__(path)
         
     def all_dates(self):
         ' Returns a numpy array containing all the datetimes '
