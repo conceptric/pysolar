@@ -10,9 +10,11 @@ class TestGoesFile(unittest.TestCase):
     """ 
     Test the GoesFile class instance
     """
-    def test_defaults_to_a_date_column_map(self):
-        goes_file = GoesFile(os.path.join(FIXTURES, XRAY))
-        column_map = goes_file.get_column_map()
+    def setUp(self):
+        self.goes = GoesFile(os.path.join(FIXTURES, XRAY))
+        
+    def test_defaults_to_a_date_column_map(self):        
+        column_map = self.goes.get_column_map()
         expected = {'col1': 'year',
                     'col2': 'month',
                     'col3': 'day', 
@@ -20,6 +22,13 @@ class TestGoesFile(unittest.TestCase):
                     'col5': 'JD days',
                     'col6': 'JD secs'}
         self.assertEquals(column_map, expected)
+
+    def test_modified_column_names(self):
+         expected = ('year', 'month', 'day', 'time',
+                     'JD days', 'JD secs', 
+                     'Date_Time', 'ModifiedJD')
+         actual = self.goes.table.names
+         self.assertEqual(expected, actual)
 
 
 class TestGoesFileGetDateRange(unittest.TestCase):
@@ -76,20 +85,12 @@ class TestAnXrayGoesFile(unittest.TestCase):
     def test_file_length(self):
         self.assertEqual(self.glength, self.goes.size())
         
-    def test_original_column_names(self):
-        expected = ['col1', 'col2', 'col3', 'col4', 
-                    'col5', 'col6', 'col7', 'col8']
-        actual = sorted(self.goes.get_column_map().keys())
-        self.assertEqual(expected, actual)
-        
-    def test_modified_column_names(self):
-        expected = ('year', 'month', 'day', 'time',
-                    'JD days', 'JD secs',
-                    '0.05-0.4 nanometer (W/m2)',
-                    '0.1-0.8 nanometer (W/m2)',
-                    'Date_Time', 'ModifiedJD')
+    def test_xray_data_column_names_exist(self):
+        expected = ('0.05-0.4 nanometer (W/m2)',
+                    '0.1-0.8 nanometer (W/m2)')
         actual = self.goes.table.names
-        self.assertEqual(expected, actual)
+        for item in expected:
+            self.assertTrue(item in actual, "'%s' is missing" % (item))
 
     def test_datetime_of_the_first_record(self):
         actual = self.goes.table.Date_Time[0]
@@ -110,21 +111,12 @@ class TestAMagneticGoesFile(unittest.TestCase):
     def test_file_length(self):
         self.assertEqual(self.glength, self.goes.size())
         
-    def test_original_column_names(self):
-        expected = ['col1', 'col10', 'col2', 'col3', 'col4', 
-                    'col5', 'col6', 'col7', 'col8',
-                    'col9']
-        actual = sorted(self.goes.get_column_map().keys())
-        self.assertEqual(expected, actual)
-        
-    def test_modified_column_names(self):
-        expected = ('year', 'month', 'day', 'time',
-                    'JD days', 'JD secs',
-                    'Hp (nT)', 'He (nT)', 'Hn (nT)',
-                    'Total Field (nT)',
-                    'Date_Time', 'ModifiedJD')
+    def test_magnetic_data_column_names_exist(self):
+        expected = ('Hp (nT)', 'He (nT)', 'Hn (nT)',
+                    'Total Field (nT)')
         actual = self.goes.table.names
-        self.assertEqual(expected, actual)
+        for item in expected:
+            self.assertTrue(item in actual, "'%s' is missing" % (item))
 
     def test_datetime_of_the_first_record(self):
         actual = self.goes.table.Date_Time[0]
