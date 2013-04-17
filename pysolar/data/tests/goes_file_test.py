@@ -46,10 +46,10 @@ class TestGoesFileGetDateRange(unittest.TestCase):
     def setUp(self):
         self.goes = GoesFile(os.path.join(FIXTURES, XRAY))
 
-    def test_get_date_range(self):
+    def test_select_between_dates(self):
         start   = "2013-02-27 00:30"
         end     = "2013-02-27 01:00"
-        actual = self.goes.get_date_range(start, end)
+        actual = self.goes.select_between_dates(start, end)
         self.assertEqual(actual['Date_Time'][0], start)
         self.assertEqual(len(actual), 7)
         self.assertEqual(actual.Date_Time[6], end)
@@ -58,19 +58,19 @@ class TestGoesFileGetDateRange(unittest.TestCase):
         start   = "invalid"
         end     = "2013-02-27 01:00"
         with self.assertRaises(ValueError):
-            self.goes.get_date_range(start, end)        
+            self.goes.select_between_dates(start, end)        
 
     def test_invalid_datetime(self):
         start   = "2013-02-27 23:50"
         end     = "2013-02-27 24:55"
         with self.assertRaises(ValueError):
-            self.goes.get_date_range(start, end)        
+            self.goes.select_between_dates(start, end)        
 
     def test_start_is_after_the_end_datetime(self):
         start   = "2013-02-27 23:50"
         end     = "2013-02-27 23:40"
         with self.assertRaises(ValueError):
-            self.goes.get_date_range(start, end)        
+            self.goes.select_between_dates(start, end)        
 
     def test_first_modified_jd(self):
         actual = self.goes.table.ModifiedJD[0]

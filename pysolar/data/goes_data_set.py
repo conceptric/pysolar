@@ -30,7 +30,7 @@ class GoesDataSet:
             except IOError:
                 pass
         
-    def get_date_range(self, start, end):
+    def select_between_dates(self, start, end):
         ''' 
         Returns a table containing records between, and inclusive of, 
         the datetimes defined by the provided strings formatted:
@@ -42,7 +42,7 @@ class GoesDataSet:
         '''
         query = []
         for file in self.datafiles:
-            query.append(file.get_date_range(start, end))
+            query.append(file.select_between_dates(start, end))
         return self.__combine_tables(query)
         
     def __combine_tables(self, tables):

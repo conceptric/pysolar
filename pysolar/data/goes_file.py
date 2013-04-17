@@ -65,27 +65,6 @@ class GoesFile(DataFile):
 
     def get_column_map(self):
         return self.column_map
-
-    def get_date_range(self, start, end):
-        ''' 
-        Returns a table containing records between, and inclusive of, 
-        the datetimes defined by the provided strings formatted:
-        
-        "YYYY-MM-DD HH:MM:SS"
-        
-        start   = first datetime to be retrieved
-        end     = last datetime to be retrieved
-        '''
-        start_time = datetime64(start)
-        end_time = datetime64(end)
-        if end_time < start_time: 
-            raise ValueError('The end time cannot be before you start')
-        
-        datetimes = self.table.Date_Time.astype(datetime64)
-        
-        query = self.table.where(
-         (datetimes >= start_time) & (datetimes <= end_time))
-        return query
         
 
 class XrayGoesFile(GoesFile):
