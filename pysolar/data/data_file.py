@@ -25,3 +25,6 @@ class DataFile(object):
         ' Returns an integer for the number of records '
         return len(self.table)
 
+    def names(self):
+        ' Returns the names of the fields in the table attribute '
+        return self.table.names

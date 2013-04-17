@@ -7,7 +7,7 @@ from pysolar.data import DataFile
 
 class TestDataFile(unittest.TestCase):
     """
-    Tests the basic functionality of the DataSet class.
+    Tests the basic error handling of the DataSet class.
     """
     def test_requires_path(self):
         with self.assertRaises(TypeError):
@@ -33,11 +33,23 @@ class TestDataFile(unittest.TestCase):
         test_file = os.path.join(FIXTURES, 'empty_file.txt')
         with self.assertRaises(InconsistentTableError):
             DataFile(test_file)
-    
+
+class TestValidDataFile(unittest.TestCase):
+    """
+    Tests the basic functionality of the DataSet class.
+    """
+    def setUp(self):
+        test_file = os.path.join(FIXTURES, 'example_vlf_data.txt')
+        self.datafile = DataFile(test_file)
+        
     def test_size(self):
         ' Test the number of records in a valid file '
-        test_file = os.path.join(FIXTURES, 'example_vlf_data.txt')
-        self.assertEqual(4, DataFile(test_file).size())
+        self.assertEqual(4, self.datafile.size())
+    
+    def test_names(self):
+        ' Test that the names can be retrieved from the table '
+        expected = ('Date_Time', 'Noise', 'ICV')
+        self.assertEqual(expected, self.datafile.names())
     
 
 if __name__ == '__main__':
