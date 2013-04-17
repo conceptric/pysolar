@@ -43,4 +43,21 @@ class DataFile(object):
         ' Returns the latest datetime in the file '
         return self.all_dates().max()
 
-        
+    def select_between_dates(self, start, end=''):
+        ''' 
+        Returns a table containing records from the start to the 
+        end datetimes inclusively. Datetime strings must be formatted 
+        to be compatible with Numpy datetime64, such as:
+        "YYYY-MM-DD HH:MM:SS".
+
+        start   : start datetime string.
+        end     : optional datetime string, defaults to start.
+        '''
+        dates = self.all_dates()
+        if end == '': end = start
+        start = datetime64(start)
+        end = datetime64(end)
+        if end < start: 
+            raise ValueError('The end time cannot be before you start')
+        return self.table.where((dates >= start) & (dates <= end))
+

@@ -73,5 +73,45 @@ class TestDateTimeMethods(unittest.TestCase):
         self.assertEqual(expected, self.datafile.finishes())
 
 
+class TestRecordSelectionMethods(unittest.TestCase):
+    """ Test methods for selecting data records """
+    def setUp(self):
+        test_file = os.path.join(FIXTURES, 'example_vlf_data.txt')
+        self.datafile = DataFile(test_file)
+    
+    def test_select_a_single_record_by_datetime(self):
+        expected = '2013-03-23 19:12:43'
+        selection = self.datafile.select_between_dates(start=expected)
+        self.assertEqual(1, len(selection))
+        self.assertEqual(expected, selection['Date_Time'])
+
+    def test_select_records_from_middle_of_the_file_by_datetime(self):
+        expected_start = '2013-03-23 19:12:58'
+        expected_end = '2013-03-23 19:13:13'
+        selection = self.datafile.select_between_dates(start=expected_start, 
+        end=expected_end)
+        self.assertEqual(2, len(selection))
+        self.assertEqual(expected_start, selection['Date_Time'][0])
+        self.assertEqual(expected_end, selection['Date_Time'][1])
+        
+    def test_invalid_datetime_type(self):
+        start   = "invalid"
+        end     = "2013-03-23 19:13:13"
+        with self.assertRaises(ValueError):
+            self.datafile.select_between_dates(start, end)        
+
+    def test_invalid_datetime(self):
+        start       = "2013-03-23 19:13:13"
+        invalid_end = "2013-02-27 24:55:59"
+        with self.assertRaises(ValueError):
+            self.datafile.select_between_dates(start, invalid_end)        
+
+    def test_start_is_after_the_end_datetime(self):
+        start   = "2013-03-23 19:13:13"
+        end     = "2013-03-23 19:12:58"
+        with self.assertRaises(ValueError):
+            self.datafile.select_between_dates(start, end)        
+
+
 if __name__ == '__main__':
     unittest.main()

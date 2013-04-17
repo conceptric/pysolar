@@ -17,17 +17,4 @@ class VlfFile(DataFile):
     def __init__(self, path):
         super(VlfFile, self).__init__(path)
         
-    def select_between_dates(self, start, end=''):
-        '''
-        Returns the records from the start to the 
-        end datetimes inclusively.
-        start   : start datetime string.
-        end     : optional datetime string, defaults to start.
-        '''
-        dates = self.all_dates()
-        if end == '': end = start
-        start = np.datetime64(start)
-        end = np.datetime64(end)
-        return self.table.where((dates >= start) & (dates <= end))
-        
         
