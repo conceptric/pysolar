@@ -91,7 +91,7 @@ class DataFile(object):
         delta = (dt - np.datetime64('1858-11-17 00:00'))
         days = delta.item().days
         secs = delta.item().seconds / (24.0 * 3600)
-        return days + secs
+        return round(days + secs, 5)
         
         
         

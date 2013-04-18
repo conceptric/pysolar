@@ -44,17 +44,11 @@ class GoesFile(DataFile):
         " Inserts columns for JD date and datetime"
         self.table.add_column('Date_Time', self.__fill_datetimes(), 
             dtype='str')
-        self.table.add_column('ModifiedJD', self.__fill_JD(), 
-            dtype='float')
+        self.insert_modified_julian_day_column()
 
     def __fill_datetimes(self):
         " Fills the datetime column "
         f = lambda x: DateCompiler().build_datetime(x)
-        return self.fill_column_by_function(f)
-        
-    def __fill_JD(self):
-        " Fills the ModifiedJD column "
-        f = lambda x: DateCompiler().modified_julian_date(x)
         return self.fill_column_by_function(f)
         
     def get_column_map(self):
