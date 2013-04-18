@@ -1,5 +1,5 @@
 import atpy
-from numpy import datetime64
+import numpy as np
 
 class DataFile(object):
     """
@@ -33,7 +33,7 @@ class DataFile(object):
         
     def all_dates(self):
         ' Returns a numpy array containing all the datetimes '
-        return self.table[self.datetime_label].astype(datetime64)
+        return self.table[self.datetime_label].astype(np.datetime64)
 
     def begins(self):
         ' Returns the earliest datetime in the file '
@@ -55,9 +55,43 @@ class DataFile(object):
         '''
         dates = self.all_dates()
         if end == '': end = start
-        start = datetime64(start)
-        end = datetime64(end)
+        start = np.datetime64(start)
+        end = np.datetime64(end)
         if end < start: 
             raise ValueError('The end time cannot be before you start')
         return self.table.where((dates >= start) & (dates <= end))
 
+    def insert_modified_julian_day_column(self):
+        " Creates and fills the ModifiedJD column. "
+        self.table.add_column('ModifiedJD', self.__fill_JD(), dtype='float')
+
+    def __fill_JD(self):
+        " Fills the ModifiedJD column "
+        f = lambda x: self.__mjd(x)
+        return self.fill_column_by_function(f)
+        
+    def __mjd(self, comp):
+        return self.modified_julian_day(np.datetime64(comp['Date_Time']))
+
+    def fill_column_by_function(self, func):
+        ''' 
+        Uses a lambda function to generate contents for a column.
+        Returns a list of the generated values.
+        '''
+        stack = []
+        for row in self.table:
+            stack.append(func(row))
+        return stack
+
+    def modified_julian_day(self, dt):
+        ''' 
+        Converts a numpy datetime to a float of the number of 
+        modified Julian days. 
+        '''
+        delta = (dt - np.datetime64('1858-11-17 00:00'))
+        days = delta.item().days
+        secs = delta.item().seconds / (24.0 * 3600)
+        return days + secs
+        
+        
+        

@@ -50,19 +50,13 @@ class GoesFile(DataFile):
     def __fill_datetimes(self):
         " Fills the datetime column "
         f = lambda x: DateCompiler().build_datetime(x)
-        return self.__fill_column(f)
+        return self.fill_column_by_function(f)
         
     def __fill_JD(self):
         " Fills the ModifiedJD column "
         f = lambda x: DateCompiler().modified_julian_date(x)
-        return self.__fill_column(f)
+        return self.fill_column_by_function(f)
         
-    def __fill_column(self, func):
-        stack = []
-        for row in self.table:
-            stack.append(func(row))
-        return stack
-
     def get_column_map(self):
         return self.column_map
         

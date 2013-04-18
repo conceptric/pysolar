@@ -16,5 +16,5 @@ class VlfFile(DataFile):
     """
     def __init__(self, path):
         super(VlfFile, self).__init__(path)
-        
+        self.insert_modified_julian_day_column()
         
