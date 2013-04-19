@@ -1,5 +1,19 @@
 import numpy as np
 import atpy
+
+SECONDS_PER_DAY = (24.0 * 3600)
+MJD_BASELINE = np.datetime64('1858-11-17 00:00')
+
+def modified_julian_day(dt):
+    ''' 
+    Returns the datetime as modified Julian days 
+    rounded to 5 decimal places. 
+    '''
+    delta = (dt - MJD_BASELINE)
+    days = delta.item().days
+    secs = delta.item().seconds / SECONDS_PER_DAY
+    return round(days + secs, 5)
+
    
 class DateCompiler:
     '''

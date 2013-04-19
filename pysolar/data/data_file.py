@@ -1,6 +1,9 @@
 import atpy
 import numpy as np
 
+from pysolar.utils.datetime import *
+
+
 class DataFile(object):
     """
     Class to represent the contents of a data file and 
@@ -71,7 +74,7 @@ class DataFile(object):
         return self.fill_column_by_function(f)
         
     def __mjd(self, comp):
-        return self.modified_julian_day(np.datetime64(comp['Date_Time']))
+        return modified_julian_day(np.datetime64(comp['Date_Time']))
 
     def fill_column_by_function(self, func):
         ''' 
@@ -82,16 +85,5 @@ class DataFile(object):
         for row in self.table:
             stack.append(func(row))
         return stack
-
-    def modified_julian_day(self, dt):
-        ''' 
-        Converts a numpy datetime to a float of the number of 
-        modified Julian days. 
-        '''
-        delta = (dt - np.datetime64('1858-11-17 00:00'))
-        days = delta.item().days
-        secs = delta.item().seconds / (24.0 * 3600)
-        return round(days + secs, 5)
-        
-        
-        
+       
+                

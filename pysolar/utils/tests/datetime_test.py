@@ -1,5 +1,20 @@
 import unittest
-from pysolar.utils.datetime import DateCompiler
+from pysolar.utils.datetime import *
+from numpy import datetime64
+
+
+class TestModifiedJulianDay(unittest.TestCase):
+    " Test that a modified Julian day function "        
+    def test_simple_modified_julian_day(self):
+        expected = 56373.0
+        actual = modified_julian_day(datetime64('2013-03-22 00:00'))
+        self.assertEqual(expected, actual, 'The Julian Date is wrong')
+
+    def test_tricky_modified_julian_day(self):
+        expected = 56351.03125
+        actual = modified_julian_day(datetime64('2013-02-28 00:45'))
+        self.assertEqual(expected, actual)
+
 
 class TestDateCompilerDatetimes(unittest.TestCase):
     """ 
