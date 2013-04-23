@@ -6,53 +6,20 @@ from pysolar.data import GoesDataSet
 
 FILENAMES =  ['20130227_Gp_xr_5m.txt', '20130228_Gp_xr_5m.txt']
 
-class TestDataSet(unittest.TestCase):
+class TestGoesDataSetType(unittest.TestCase):
     """ 
-    Test that the DataSet class exists and has
-    the correct attributes. 
+    Test that the GoesDataSet can instantiate with the 
+    correct type. 
     """
     def setUp(self):
         self.dataset = GoesDataSet()
             
-    def test_exists(self):
-        self.assert_(self.dataset)
-
-    def test_has_empty_datafiles_attribute(self):
-        self.assertEquals(self.dataset.datafiles, [])
-
     def test_filetype_attribute_defaults_to_xray(self):
         self.assertEquals(self.dataset.filetype, 'xray')
 
     def test_filetype_attribute_is_magnetic(self):
         dataset = GoesDataSet('magnetic')
         self.assertEquals(dataset.filetype, 'magnetic')
-
-
-class TestDataSetCompile(unittest.TestCase):
-    """ 
-    Test that the DataSet class can import multiple 
-    GOES-15 X-Ray data files.
-    """
-    def setUp(self):
-        self.dataset = GoesDataSet()
-
-    def test_ignores_empty_file_list(self):
-        self.dataset.compile(FIXTURES, [])
-        self.assertEquals(0, len(self.dataset.datafiles))
-
-    def test_ignores_incorrect_filename_in_list(self):
-        self.dataset.compile(FIXTURES, ['wrong_name.txt'])
-        self.assertEquals(0, len(self.dataset.datafiles))        
-
-    def test_add_file_to_dataset(self):
-        self.dataset.compile(FIXTURES, [FILENAMES[0]])
-        actual = len(self.dataset.datafiles)
-        self.assertEquals(1, actual)
-
-    def test_add_two_files_to_dataset(self):
-        self.dataset.compile(FIXTURES, FILENAMES)
-        actual = len(self.dataset.datafiles)
-        self.assertEquals(2, actual)
 
 
 class TestDataSetCompileTypes(unittest.TestCase):
@@ -72,7 +39,7 @@ class TestDataSetCompileTypes(unittest.TestCase):
         self.assertIsNotNone(magnetic['Total Field (nT)'])
 
 
-class TestDataSetGetDateRanges(unittest.TestCase):
+class TestSelectBetweenDates(unittest.TestCase):
     """ 
     Test the methods for working with date ranges
     that spread over multiple files.
@@ -105,4 +72,5 @@ class TestDataSetGetDateRanges(unittest.TestCase):
         self.assertEqual(actual.Date_Time[self.records - 1], self.end)
 
 
-
+if __name__ == '__main__':
+    unittest.main()
