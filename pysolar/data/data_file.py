@@ -19,12 +19,23 @@ class DataFile(object):
     """
     def __init__(self, path, delimiter=',', header_start=0, data_start=1):
         self.datetime_label = 'Date_Time'   
+        self.mjd_label = 'ModifiedJD'   
         self.table = self.__read(path, delimiter, header_start, data_start)
+        if self.has_column(self.datetime_label):
+            self.insert_modified_julian_day_column()            
     
     def __read(self, path, delimiter, header_start, data_start):
         data = atpy.Table(path, type="ascii", delimiter=delimiter, 
         header_start=header_start, data_start=data_start)
         return data
+
+    def has_column(self, name):
+        ' Returns True if present, and False if not '
+        try:
+            self.table[name]
+            return True
+        except ValueError:
+            return False
         
     def size(self):
         ' Returns an integer for the number of records '
@@ -46,6 +57,10 @@ class DataFile(object):
         ' Returns the latest datetime in the file '
         return self.all_dates().max()
 
+    def sort(self):
+        ' Sorts the data records into datetime order '
+        self.table.sort(self.mjd_label)
+
     def select_between_dates(self, start, end=''):
         ''' 
         Returns a table containing records from the start to the 
@@ -66,16 +81,13 @@ class DataFile(object):
 
     def insert_modified_julian_day_column(self):
         " Creates and fills the ModifiedJD column. "
-        self.table.add_column('ModifiedJD', self.__fill_JD(), dtype='float')
+        self.table.add_column(self.mjd_label, self.dates_as_mjd(), dtype='float')
 
-    def __fill_JD(self):
-        " Fills the ModifiedJD column "
-        f = lambda x: self.__mjd(x)
+    def dates_as_mjd(self):
+        " Returns a list of Modified Julian Days corresponding to the Date_Time. "
+        f = lambda x: modified_julian_day(np.datetime64(x[self.datetime_label]))
         return self.fill_column_by_function(f)
         
-    def __mjd(self, comp):
-        return modified_julian_day(np.datetime64(comp['Date_Time']))
-
     def fill_column_by_function(self, func):
         ''' 
         Uses a lambda function to generate contents for a column.

@@ -32,7 +32,8 @@ class GoesFile(DataFile):
         self.column_map = fields              
         self.table.keep_columns(self.get_column_map().keys())
         self.__rename_columns()
-        self.__insert_new_columns()
+        self.__insert_datetime_column()
+        self.insert_modified_julian_day_column()
     
     def __rename_columns(self):
         " Renames the imported columns with something more descriptive "
@@ -40,14 +41,13 @@ class GoesFile(DataFile):
             if (k in self.table.names):
                 self.table.rename_column(k, v)        
 
-    def __insert_new_columns(self):
-        " Inserts columns for JD date and datetime"
-        self.table.add_column('Date_Time', self.__fill_datetimes(), 
+    def __insert_datetime_column(self):
+        " Inserts column for datetime"
+        self.table.add_column(self.datetime_label, self.__fill_datetimes(), 
             dtype='str')
-        self.insert_modified_julian_day_column()
 
     def __fill_datetimes(self):
-        " Fills the datetime column "
+        " Returns a list of properly formatted datetime strings "
         f = lambda x: DateCompiler().build_datetime(x)
         return self.fill_column_by_function(f)
         

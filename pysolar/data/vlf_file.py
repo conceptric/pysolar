@@ -15,6 +15,4 @@ class VlfFile(DataFile):
     The table attribute contains the ATPy table instance.
     """
     def __init__(self, path):
-        super(VlfFile, self).__init__(path)
-        self.insert_modified_julian_day_column()
-        
+        super(VlfFile, self).__init__(path)        

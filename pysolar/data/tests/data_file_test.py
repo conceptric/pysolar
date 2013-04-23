@@ -4,6 +4,7 @@ from numpy import datetime64
 from asciitable import InconsistentTableError
 
 from data_test_config import *
+from pysolar.utils.datetime import *
 from pysolar.data import DataFile
 
 class TestDataFile(unittest.TestCase):
@@ -49,8 +50,12 @@ class TestValidDataFile(unittest.TestCase):
     
     def test_names(self):
         ' Test that the names can be retrieved from the table '
-        expected = ('Date_Time', 'Noise', 'ICV')
+        expected = ('Date_Time', 'Noise', 'ICV', 'ModifiedJD')
         self.assertEqual(expected, self.datafile.names())
+        
+    def test_has_column(self):
+        self.assertTrue(self.datafile.has_column('Date_Time'))
+        self.assertFalse(self.datafile.has_column('HWU'))
 
 
 class TestDateTimeMethods(unittest.TestCase):
@@ -71,6 +76,41 @@ class TestDateTimeMethods(unittest.TestCase):
     def test_finishes(self):
         expected = datetime64('2013-03-23 19:13:28')
         self.assertEqual(expected, self.datafile.finishes())
+        
+    def test_dates_as_mjd(self):
+        expected = modified_julian_day(datetime64('2013-03-23 19:12:43'))
+        dates = self.datafile.dates_as_mjd()
+        self.assertEqual(expected, dates[0])
+        self.assertEqual(4, len(dates))
+
+    def test_dates_as_mjd_with_invalid_datetime_label(self):
+        self.datafile.datetime_label = 'datetime'
+        with self.assertRaises(IndexError):
+            self.datafile.dates_as_mjd()
+
+class TestSortingMethods(unittest.TestCase):
+    " Test methods for sorting data. "
+    def setUp(self):
+        test_file = os.path.join(FIXTURES, 'out_of_sequence_data.txt')
+        self.datafile = DataFile(test_file)
+
+    def test_reading_out_of_sequence_data(self):
+        expected_start = np.datetime64('2013-03-23 19:12:58')
+        expected_end = np.datetime64('2013-03-23 19:13:13')
+        dates = self.datafile.all_dates()
+        self.assertEqual(4, len(dates))
+        self.assertEqual(expected_start, dates[0])
+        self.assertEqual(expected_end, dates[3])
+
+    def test_reading_out_of_sequence_data(self):
+        expected_start = np.datetime64('2013-03-23 19:12:43')
+        expected_end = np.datetime64('2013-03-23 19:13:28')
+        self.datafile.sort()
+        dates = self.datafile.all_dates()
+        self.assertEqual(4, len(dates))
+        self.assertEqual(expected_start, dates[0])
+        self.assertEqual(expected_end, dates[3])
+        
 
 
 class TestRecordSelectionMethods(unittest.TestCase):
