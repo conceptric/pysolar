@@ -88,6 +88,7 @@ class TestDateTimeMethods(unittest.TestCase):
         with self.assertRaises(IndexError):
             self.datafile.dates_as_mjd()
 
+
 class TestSortingMethods(unittest.TestCase):
     " Test methods for sorting data. "
     def setUp(self):
@@ -111,7 +112,6 @@ class TestSortingMethods(unittest.TestCase):
         self.assertEqual(expected_start, dates[0])
         self.assertEqual(expected_end, dates[3])
         
-
 
 class TestRecordSelectionMethods(unittest.TestCase):
     """ Test methods for selecting data records """

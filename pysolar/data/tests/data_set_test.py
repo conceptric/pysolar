@@ -46,6 +46,34 @@ class TestCompile(unittest.TestCase):
         actual = len(self.dataset.datafiles)
         self.assertEquals(2, actual)
 
+class TestSelectBetweenDates(unittest.TestCase):
+    """ 
+    Test the methods for working with date ranges
+    that spread over multiple files.
+    """    
+    def setUp(self):
+        self.dataset = DataSet()
+        self.dataset.compile(FIXTURES, FILENAMES)
+        self.start   = "2013-03-28 00:04:43"
+        self.end     = "2013-03-28 00:05:43"
+        self.records = 5
+    
+    def test_correct_number_of_records(self):
+        actual = self.dataset.select_between_dates(self.start, self.end)
+        self.assertEqual(len(actual), self.records)
+    
+    def test_files_in_date_order(self):
+        actual = self.dataset.select_between_dates(self.start, self.end)
+        self.assertEqual(actual.Date_Time[0], self.start)
+        self.assertEqual(actual.Date_Time[self.records - 1], self.end)
+
+    def test_files_not_in_date_order(self):
+        reversed_dataset = DataSet()
+        reversed_dataset.compile(FIXTURES, reversed(FILENAMES))
+        actual = reversed_dataset.select_between_dates(self.start, self.end)
+        self.assertEqual(actual.Date_Time[0], self.start)
+        self.assertEqual(actual.Date_Time[self.records - 1], self.end)
+
 
 if __name__ == '__main__':
     unittest.main()
