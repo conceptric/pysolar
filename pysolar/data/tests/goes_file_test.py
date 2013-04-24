@@ -25,7 +25,7 @@ class TestGoesFile(unittest.TestCase):
     def test_modified_column_names(self):
          expected = ('year', 'month', 'day', 'time',
                      'JD days', 'JD secs', 'Date_Time', 'ModifiedJD')
-         actual = self.goes.names()
+         actual = self.goes.names
          for item in expected:
              self.assertTrue(item in actual, "'%s' is missing" % (item))
 

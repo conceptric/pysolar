@@ -29,6 +29,10 @@ class DataFile(object):
         header_start=header_start, data_start=data_start)
         return data
 
+    def __getattr__(self, name):
+        ' Forwards unknown attributes to the wrapped Table '
+        return getattr(self.table, name)
+
     def has_column(self, name):
         ' Returns True if present, and False if not '
         try:
@@ -41,10 +45,6 @@ class DataFile(object):
         ' Returns an integer for the number of records '
         return len(self.table)
 
-    def names(self):
-        ' Returns the names of the fields in the table attribute '
-        return self.table.names
-        
     def all_dates(self):
         ' Returns a numpy array containing all the datetimes '
         return self.table[self.datetime_label].astype(np.datetime64)

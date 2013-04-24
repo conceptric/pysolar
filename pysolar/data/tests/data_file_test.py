@@ -51,7 +51,7 @@ class TestValidDataFile(unittest.TestCase):
     def test_names(self):
         ' Test that the names can be retrieved from the table '
         expected = ('Date_Time', 'Noise', 'ICV', 'ModifiedJD')
-        self.assertEqual(expected, self.datafile.names())
+        self.assertEqual(expected, self.datafile.names)
         
     def test_has_column(self):
         self.assertTrue(self.datafile.has_column('Date_Time'))

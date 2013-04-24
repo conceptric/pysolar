@@ -18,7 +18,7 @@ class TestAnXrayGoesFile(unittest.TestCase):
     def test_xray_data_column_names_exist(self):
         expected = ('0.05-0.4 nanometer (W/m2)',
                     '0.1-0.8 nanometer (W/m2)')
-        actual = self.goes.names()
+        actual = self.goes.names
         for item in expected:
             self.assertTrue(item in actual, "'%s' is missing" % (item))
 
@@ -37,7 +37,7 @@ class TestAMagneticGoesFile(unittest.TestCase):
     def test_magnetic_data_column_names_exist(self):
         expected = ('Hp (nT)', 'He (nT)', 'Hn (nT)',
                     'Total Field (nT)')
-        actual = self.goes.names()
+        actual = self.goes.names
         for item in expected:
             self.assertTrue(item in actual, "'%s' is missing" % (item))
 
