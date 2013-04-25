@@ -4,50 +4,23 @@ import numpy as np
 from pysolar.utils.datetime import *
 
 
-class DataFile(object):
+class DataTable(atpy.Table):
     """
-    Class to represent the contents of a data file and 
-    provide basic methods to query and manipulate these 
-    data using ATPy tables.
+    Class to extend the basic ATPy Table with a methods to 
+    query and manipulate data containing DateTimes.
     
-    path        : path to the data file.
-    delimiter   : optional data delimiter, defaults to ",".
-    header_start: optional position of header row, defaults to 0.
-    data_start  : optional position of first data row, defaults to 1.
-     
-    The table attribute contains the ATPy table instance.           
+    Can be instantiated using all the normal ATPy Table methods.
     """
-    def __init__(self, path, delimiter=',', header_start=0, data_start=1):
-        self.datetime_label = 'Date_Time'   
-        self.mjd_label = 'ModifiedJD'   
-        self.table = self.__read(path, delimiter, header_start, data_start)
-        if self.has_column(self.datetime_label):
-            self.insert_modified_julian_day_column()            
-    
-    def __read(self, path, delimiter, header_start, data_start):
-        data = atpy.Table(path, type="ascii", delimiter=delimiter, 
-        header_start=header_start, data_start=data_start)
-        return data
-
-    def __getattr__(self, name):
-        ' Forwards unknown attributes to the wrapped Table '
-        return getattr(self.table, name)
-
-    def has_column(self, name):
-        ' Returns True if present, and False if not '
-        try:
-            self.table[name]
-            return True
-        except ValueError:
-            return False
+    datetime_label  = 'Date_Time'
+    mjd_label       = 'ModifiedJD'
         
     def size(self):
         ' Returns an integer for the number of records '
-        return len(self.table)
+        return len(self)
 
     def all_dates(self):
         ' Returns a numpy array containing all the datetimes '
-        return self.table[self.datetime_label].astype(np.datetime64)
+        return self[self.datetime_label].astype(np.datetime64)
 
     def begins(self):
         ' Returns the earliest datetime in the file '
@@ -57,9 +30,17 @@ class DataFile(object):
         ' Returns the latest datetime in the file '
         return self.all_dates().max()
 
-    def sort(self):
+    def sort_by_mjd(self):
         ' Sorts the data records into datetime order '
-        self.table.sort(self.mjd_label)
+        self.sort(self.mjd_label)
+
+    def has_column(self, name):
+        ' Returns True if present, and False if not '
+        try:
+            self[name]
+            return True
+        except ValueError:
+            return False
 
     def select_between_dates(self, start, end=''):
         ''' 
@@ -77,7 +58,35 @@ class DataFile(object):
         end = np.datetime64(end)
         if end < start: 
             raise ValueError('The end time cannot be before you start')
-        return self.table.where((dates >= start) & (dates <= end))
+        return self.where((dates >= start) & (dates <= end))
+    
+
+class DataFile(object):
+    """
+    Class to represent the contents of a data file and 
+    provide basic methods to query and manipulate these 
+    data using ATPy tables.
+    
+    path        : path to the data file.
+    delimiter   : optional data delimiter, defaults to ",".
+    header_start: optional position of header row, defaults to 0.
+    data_start  : optional position of first data row, defaults to 1.
+     
+    The table attribute contains a DataTable instance, subclass of ATPy Table.           
+    """
+    def __init__(self, path, delimiter=',', header_start=0, data_start=1):
+        self.table = self.__read(path, delimiter, header_start, data_start)
+        if self.has_column(self.datetime_label):
+            self.insert_modified_julian_day_column()            
+    
+    def __read(self, path, delimiter, header_start, data_start):
+        data = DataTable(path, type="ascii", delimiter=delimiter, 
+        header_start=header_start, data_start=data_start)
+        return data
+
+    def __getattr__(self, name):
+        ' Forwards unknown attributes to the wrapped Table '
+        return getattr(self.table, name)
 
     def insert_modified_julian_day_column(self):
         " Creates and fills the ModifiedJD column. "

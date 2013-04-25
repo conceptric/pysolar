@@ -5,7 +5,7 @@ from asciitable import InconsistentTableError
 
 from data_test_config import *
 from pysolar.utils.datetime import *
-from pysolar.data import DataFile
+from pysolar.data import DataFile, DataTable
 
 class TestDataFile(unittest.TestCase):
     """
@@ -106,7 +106,7 @@ class TestSortingMethods(unittest.TestCase):
     def test_reading_out_of_sequence_data(self):
         expected_start = np.datetime64('2013-03-23 19:12:43')
         expected_end = np.datetime64('2013-03-23 19:13:28')
-        self.datafile.sort()
+        self.datafile.sort_by_mjd()
         dates = self.datafile.all_dates()
         self.assertEqual(4, len(dates))
         self.assertEqual(expected_start, dates[0])
@@ -122,7 +122,7 @@ class TestRecordSelectionMethods(unittest.TestCase):
     def test_select_a_single_record_by_datetime(self):
         expected = '2013-03-23 19:12:43'
         selection = self.datafile.select_between_dates(start=expected)
-        self.assertEqual(1, len(selection))
+        self.assertEqual(1, selection.size())
         self.assertEqual(expected, selection['Date_Time'])
 
     def test_select_records_from_middle_of_the_file_by_datetime(self):
@@ -130,7 +130,7 @@ class TestRecordSelectionMethods(unittest.TestCase):
         expected_end = '2013-03-23 19:13:13'
         selection = self.datafile.select_between_dates(start=expected_start, 
         end=expected_end)
-        self.assertEqual(2, len(selection))
+        self.assertEqual(2, selection.size())
         self.assertEqual(expected_start, selection['Date_Time'][0])
         self.assertEqual(expected_end, selection['Date_Time'][1])
         
